@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# 虚拟环境
+.venv/
+venv/
+
+# 数据库
+*.db
+
+# IDE（IDEA 的工程文件不提交，VS Code 的 .vscode 配置需要提交）
+.idea/
+*.iml
+.vscode/*.log
+
+# 系统
+.DS_Store
+Thumbs.db
