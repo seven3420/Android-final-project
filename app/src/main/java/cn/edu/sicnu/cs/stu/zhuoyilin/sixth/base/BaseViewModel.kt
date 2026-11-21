@@ -1,6 +1,7 @@
 package cn.edu.sicnu.cs.stu.zhuoyilin.sixth.base
 
 import androidx.lifecycle.ViewModel
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.common.auth.AuthManager
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.exception.ApiException
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.exception.ErrorCode
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.response.ApiResponse
@@ -13,8 +14,13 @@ import java.io.IOException
 open class BaseViewModel : ViewModel() {
 
     /**
+     * 登录页等场景可置为 false，避免登录失败（401）时又触发跳转登录页。
+     */
+    open val autoHandleTokenExpired: Boolean = true
+
+    /**
      * 统一执行网络请求：
-     * 1. HTTP 401 / code 401 -> ApiException(401)
+     * 1. HTTP 401 / code 401 -> 清 token 并跳登录页，抛 ApiException(401)
      * 2. code != 200 -> ApiException(code, msg)
      * 3. 网络/解析异常统一转成 ApiException，UI 层只需要 catch ApiException
      */
@@ -26,13 +32,16 @@ open class BaseViewModel : ViewModel() {
             val body = response.body()
 
             if (response.code() == ErrorCode.TOKEN_INVALID) {
-                throw ApiException(ErrorCode.TOKEN_INVALID, body?.msg ?: "登录已失效，请重新登录")
+                onTokenInvalid(body?.msg)
             }
             if (!response.isSuccessful) {
                 throw ApiException(response.code(), body?.msg ?: "请求失败(${response.code()})")
             }
             if (body == null) {
                 throw ApiException(ErrorCode.PARSE_ERROR, "响应体为空")
+            }
+            if (body.code == ErrorCode.TOKEN_INVALID) {
+                onTokenInvalid(body.msg)
             }
             if (body.code != ErrorCode.SUCCESS) {
                 throw ApiException(body.code, body.msg.ifEmpty { "请求失败" })
@@ -48,5 +57,12 @@ open class BaseViewModel : ViewModel() {
         } catch (e: Exception) {
             throw ApiException(ErrorCode.PARSE_ERROR, e.message ?: "数据解析异常")
         }
+    }
+
+    private fun onTokenInvalid(msg: String?): Nothing {
+        if (autoHandleTokenExpired) {
+            AuthManager.handleTokenExpired()
+        }
+        throw ApiException(ErrorCode.TOKEN_INVALID, msg ?: "登录已失效，请重新登录")
     }
 }
