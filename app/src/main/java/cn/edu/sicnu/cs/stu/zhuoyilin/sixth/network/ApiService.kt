@@ -1,7 +1,10 @@
 package cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network
 
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.LoginRequest
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.LoginResult
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.response.ApiResponse
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -9,7 +12,7 @@ import retrofit2.http.Query
 interface ApiService {
     // A-2 账号内容域接口，参数等 A 组文档确认后再补
     @POST("login")
-    suspend fun login(): Response<ApiResponse<Any>>
+    suspend fun login(@Body body: LoginRequest): Response<ApiResponse<LoginResult>>
 
     @GET("getUserInfo")
     suspend fun getUserInfo(): Response<ApiResponse<Any>>
