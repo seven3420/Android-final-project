@@ -2,6 +2,8 @@ package cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network
 
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.LoginRequest
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.LoginResult
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.Movie
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.MoviePage
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.response.ApiResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -18,10 +20,13 @@ interface ApiService {
     suspend fun getUserInfo(): Response<ApiResponse<Any>>
 
     @GET("getMovieList")
-    suspend fun getMovieList(@Query("page") page: Int): Response<ApiResponse<Any>>
+    suspend fun getMovieList(
+        @Query("page") page: Int,
+        @Query("type") type: Int
+    ): Response<ApiResponse<MoviePage>>
 
     @GET("getMovieDetail")
-    suspend fun getMovieDetail(@Query("movieId") movieId: Int): Response<ApiResponse<Any>>
+    suspend fun getMovieDetail(@Query("movieId") movieId: Int): Response<ApiResponse<Movie>>
 
     @GET("getCinemaList")
     suspend fun getCinemaList(): Response<ApiResponse<Any>>

@@ -15,6 +15,15 @@ object RetrofitClient {
      */
     private const val BASE_URL = "http://10.0.2.2:8080/"
 
+    /**
+     * 后端返回相对路径（如 /images/a.jpg）时补全为完整地址，已带 http(s) 的原样返回。
+     */
+    fun resolveUrl(path: String?): String? {
+        if (path.isNullOrBlank()) return null
+        if (path.startsWith("http://") || path.startsWith("https://")) return path
+        return BASE_URL.trimEnd('/') + "/" + path.trimStart('/')
+    }
+
     lateinit var apiService: ApiService
         private set
 

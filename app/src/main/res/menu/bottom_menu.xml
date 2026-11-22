@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/home" android:title="首页"/>
     <item android:id="@+id/game" android:title="Game"/>
     <item android:id="@+id/hello" android:title="Hello"/>
     <item android:id="@+id/logout" android:title="退出"/>
