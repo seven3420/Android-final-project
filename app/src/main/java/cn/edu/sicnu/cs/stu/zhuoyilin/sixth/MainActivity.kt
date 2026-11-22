@@ -3,10 +3,12 @@ package cn.edu.sicnu.cs.stu.zhuoyilin.sixth
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.common.auth.AuthManager
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.ui.movie.MovieListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity() {
+    private val homeFragment = MovieListFragment()
     private val gameFragment = GameFragment.newInstance()
     private val helloFragment = HelloFragment.newInstance()
 
@@ -17,12 +19,17 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.frameLayout, gameFragment)
+                .replace(R.id.frameLayout, homeFragment)
                 .commit()
         }
 
         bottomNV.setOnItemSelectedListener { item ->
             when (item.itemId) {
+                R.id.home -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.frameLayout, homeFragment).commit()
+                    true
+                }
                 R.id.game -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.frameLayout, gameFragment).commit()

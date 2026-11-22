@@ -29,6 +29,14 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.movie.MovieDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.cinema.CinemaSelectActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
