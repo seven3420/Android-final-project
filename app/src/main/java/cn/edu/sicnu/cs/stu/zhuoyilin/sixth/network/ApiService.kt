@@ -1,9 +1,11 @@
 package cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network
 
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.Cinema
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.LoginRequest
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.LoginResult
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.Movie
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.MoviePage
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.Schedule
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.response.ApiResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -29,10 +31,14 @@ interface ApiService {
     suspend fun getMovieDetail(@Query("movieId") movieId: Int): Response<ApiResponse<Movie>>
 
     @GET("getCinemaList")
-    suspend fun getCinemaList(): Response<ApiResponse<Any>>
+    suspend fun getCinemaList(): Response<ApiResponse<List<Cinema>>>
 
     @GET("getScheduleList")
-    suspend fun getScheduleList(): Response<ApiResponse<Any>>
+    suspend fun getScheduleList(
+        @Query("cinemaId") cinemaId: Int,
+        @Query("movieId") movieId: Int,
+        @Query("date") date: String
+    ): Response<ApiResponse<List<Schedule>>>
 
     @GET("getSeatMap")
     suspend fun getSeatMap(@Query("scheduleId") scheduleId: Int): Response<ApiResponse<Any>>
