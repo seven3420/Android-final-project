@@ -5,16 +5,19 @@ GET /api/getProductList  按影院查卖品，热销置顶
 字段说明：stock 是实时库存（下单扣减、取消/超时归还），
 salesCount 是累计销量（支付成功时累加），客户端据此展示"已售 N 份"。
 """
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Request
 from database import cursor
-from utils import ok
+from utils import ok, image_url
 
 router = APIRouter()
 
 
 # ---------- 8. 卖品列表 ----------
 @router.get("/api/getProductList")
-def get_product_list(cinemaId: int = Query(..., alias="cinemaId")):
+def get_product_list(
+    request: Request,
+    cinemaId: int = Query(..., alias="cinemaId"),
+):
     with cursor() as cur:
         cur.execute(
             """SELECT id, name, image, price, origin_price, stock, sales AS salesCount,
@@ -25,4 +28,11 @@ def get_product_list(cinemaId: int = Query(..., alias="cinemaId")):
         )
         rows = cur.fetchall()
 
-    return ok([dict(r) for r in rows])
+    base = str(request.base_url)
+    items = []
+    for r in rows:
+        item = dict(r)
+        item["image"] = image_url(base, item["image"])
+        items.append(item)
+
+    return ok(items)

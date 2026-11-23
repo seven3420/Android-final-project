@@ -16,9 +16,12 @@ FastAPI 入口 —— 整个后端的启动文件
 文档：http://localhost:9000/docs（手机访问换成电脑局域网 IP）
 """
 from contextlib import asynccontextmanager
+import os
+
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from database import init_db
 from utils import ok, fail
@@ -44,6 +47,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ---------- 静态资源：海报与卖品图 ----------
+# 图片放 backend/static/ 下，通过 /static/xxx.jpg 访问，
+# 数据库里只存相对路径，接口返回时再拼成完整 URL（见 utils.image_url）
+STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+os.makedirs(STATIC_DIR, exist_ok=True)
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 # ---------- 路由注册 ----------

@@ -32,16 +32,31 @@ def seed():
         ("13800000001", "123456", "小明", now),
     )
 
-    # ===== 2. 影片 =====
+    # ===== 2. 影片（片名/主演/上映日期取自猫眼实时榜单，评分与时长为演示值）=====
     movies = [
-        ("星际远征", "https://img.placeholder/star.jpg", 9.2, 125, "科幻", "张艺谋",
-         "吴京,刘德华", "2099年人类穿越虫洞寻找新家园。", "now", "2026-11-01"),
-        ("春日来信", "https://img.placeholder/spring.jpg", 8.6, 108, "剧情", "贾樟柯",
-         "周冬雨,易烊千玺", "一封迟到十年的信。", "now", "2026-11-05"),
-        ("深海回声", "https://img.placeholder/deepsea.jpg", 8.9, 116, "悬疑", "陈思诚",
-         "刘德华,张译", "海底发现神秘信号。", "now", "2026-11-10"),
-        ("山海少年", "https://img.placeholder/hills.jpg", 9.0, 96, "动画", "田晓鹏",
-         "—", "少年踏上寻亲之旅。", "soon", "2026-11-28"),
+        # ===== 热映 now（6 部） =====
+        ("猪猪侠大电影·星际行动", "static/posters/ggbond.jpg", 9.0, 85, "动画/冒险/喜剧",
+         "李腾栋", "陆双,徐经纬,刘青扬",
+         "猪猪星被宇宙入侵者占领，超星五灵侠逃亡地球寻找音符圣杯，重新领悟团结合作。", "now", "2024-05-01"),
+        ("唐探1900", "static/posters/detective1900.jpg", 9.2, 136, "喜剧/动作/悬疑",
+         "陈思诚,戴墨", "王宝强,刘昊然,周润发",
+         "1900 年旧金山唐人街，阿鬼与秦福因一场凶杀案结缘，开启笑闹探案之旅。", "now", "2025-01-29"),
+        ("寻梦环游记", "static/posters/coco.jpg", 9.6, 105, "动画/家庭/冒险",
+         "李·昂克里奇", "安东尼·冈萨雷斯,本杰明·布拉特,盖尔·加西亚·贝纳尔",
+         "鞋匠家庭出身的米格在亡灵节误入亡灵世界，在追寻音乐梦的路上找回家族记忆。", "now", "2017-11-24"),
+        ("哪吒之魔童降世", "static/posters/nezha.jpg", 9.6, 110, "动画/奇幻",
+         "饺子", "吕艳婷,囧森瑟夫,瀚墨",
+         "灵珠与魔丸被掉包，本应是英雄的哪吒成了混世魔王，“我命由我不由天”。", "now", "2019-07-26"),
+        ("心灵奇旅", "static/posters/soul.jpg", 9.2, 101, "动画/喜剧/冒险",
+         "彼特·道格特", "杰米·福克斯,蒂娜·菲,菲利西亚·拉斯海德",
+         "中学音乐教师乔伊意外闯入“生之来处”，与厌世灵魂 22 共同寻找生命的火花。", "now", "2020-12-25"),
+        ("姜子牙", "static/posters/jiangziya.jpg", 8.3, 110, "动画/动作/冒险",
+         "程腾,李炜", "郑希,杨凝,图特哈蒙",
+         "封神之后，姜子牙为救小九踏上对抗天道的旅程，拉开封神宇宙的序幕。", "now", "2020-10-01"),
+        # ===== 待映 soon（1 部） =====
+        ("沙丘3", "static/posters/dune.jpg", 9.6, 165, "科幻/冒险",
+         "丹尼斯·维伦纽瓦", "提莫西·查拉梅,赞达亚·科尔曼,杰森·莫玛",
+         "“沙丘”三部曲终章，保罗·厄崔迪与厄拉科斯的命运走向终局。", "soon", "2026-12-31"),
     ]
     cur.executemany(
         """INSERT INTO movie (title, poster, score, duration, type, director,
@@ -104,11 +119,11 @@ def seed():
     # ===== 6. 卖品（每家影院 5 种，独立库存）=====
     products = []
     templates = [
-        ("单人套餐", "https://img.placeholder/single.jpg", 32.0, 38.0, 150, 0),
-        ("双人套餐", "https://img.placeholder/double.jpg", 58.0, 68.0, 120, 1),
-        ("大桶爆米花", "https://img.placeholder/popcorn.jpg", 25.0, 28.0, 200, 1),
-        ("可乐大杯", "https://img.placeholder/cola.jpg", 12.0, None, 300, 0),
-        ("香草冰淇淋", "https://img.placeholder/icecream.jpg", 15.0, None, 100, 0),
+        ("单人套餐", "static/products/single.jpg", 32.0, 38.0, 150, 0),
+        ("双人套餐", "static/products/double.jpg", 58.0, 68.0, 120, 1),
+        ("大桶爆米花", "static/products/popcorn.jpg", 25.0, 28.0, 200, 1),
+        ("可乐大杯", "static/products/cola.jpg", 12.0, None, 300, 0),
+        ("香草冰淇淋", "static/products/icecream.jpg", 15.0, None, 100, 0),
     ]
     for cid in range(1, 4):
         for name, img, price, origin, stock, hot in templates:

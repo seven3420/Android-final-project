@@ -19,3 +19,17 @@ def ok(data=None, msg="ok"):
 def fail(code: int, msg: str):
     """失败响应：data 固定 None，错误码见模块说明"""
     return {"code": code, "msg": msg, "data": None}
+
+
+def image_url(base: str, path: str | None) -> str | None:
+    """把库里存的相对路径拼成完整 URL
+
+    数据库只存 static/posters/xxx.jpg，接口按本次请求的地址拼接：
+    电脑访问返回 http://localhost:9000/...，手机访问自动变成 http://192.168.x.x:9000/...，
+    客户端（Glide）拿到就能直接加载，不需要自己拼 baseUrl。
+    """
+    if not path:
+        return None
+    if path.startswith(("http://", "https://")):
+        return path  # 兼容以后换成外链或 CDN 的情况
+    return base.rstrip("/") + "/" + path.lstrip("/")
