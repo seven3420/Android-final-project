@@ -82,13 +82,6 @@ class CinemaSelectActivity : BaseActivity() {
             binding.emptyView.isVisible =
                 !loading && state.error == null && (noCinema || noSchedule)
         }
-
-        viewModel.toast.observe(this) { message ->
-            if (!message.isNullOrEmpty()) {
-                ToastUtil.showShort(this, message)
-                viewModel.consumeToast()
-            }
-        }
     }
 
     private fun openSeatSelection(schedule: Schedule) {

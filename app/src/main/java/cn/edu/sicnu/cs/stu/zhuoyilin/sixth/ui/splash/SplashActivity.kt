@@ -38,14 +38,14 @@ class SplashActivity : AppCompatActivity() {
      * 否则请求会一直超时。
      */
     private fun requestLocalNetworkPermissionIfNeeded() {
-        // ACCESS_LOCAL_NETWORK 是 Android 17(API 37) 才引入的权限
-        // compileSdk 34 无法引用 Manifest.permission.ACCESS_LOCAL_NETWORK
-        val perm = "android.permission.ACCESS_LOCAL_NETWORK"
         val needRequest = Build.VERSION.SDK_INT >= 37 &&
-            ContextCompat.checkSelfPermission(this, perm) != PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_LOCAL_NETWORK
+            ) != PackageManager.PERMISSION_GRANTED
 
         if (needRequest) {
-            localNetworkPermissionLauncher.launch(perm)
+            localNetworkPermissionLauncher.launch(Manifest.permission.ACCESS_LOCAL_NETWORK)
         } else {
             proceed()
         }
