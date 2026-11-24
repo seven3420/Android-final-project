@@ -6,6 +6,7 @@ import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.LoginResult
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.Movie
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.MoviePage
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.Schedule
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.SeatMap
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.response.ApiResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -41,7 +42,7 @@ interface ApiService {
     ): Response<ApiResponse<List<Schedule>>>
 
     @GET("getSeatMap")
-    suspend fun getSeatMap(@Query("scheduleId") scheduleId: Int): Response<ApiResponse<Any>>
+    suspend fun getSeatMap(@Query("scheduleId") scheduleId: Int): Response<ApiResponse<SeatMap>>
 
     @GET("getProductList")
     suspend fun getProductList(): Response<ApiResponse<Any>>
