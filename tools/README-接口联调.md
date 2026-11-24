@@ -1,55 +1,59 @@
 # 交易链路接口联调（成员 C）
 
-D1 产出：`RetrofitClient` 单例 + `OrderApi` 接口声明 + 契约测试，验收为
-「能拿到接口返回的 JSON，数据类和 JSON 字段对得上」。
+**2026-11-24 定稿**：以成员 A 的《后端接口文档》（README.md）为唯一依据，
+与课程说明书不一致处全部按 A 的文档走。已确认要点：
 
-## 一、本地 mock（A 的后端没起来时用这个）
+| 事项 | 定稿结论 |
+|------|----------|
+| payOrder 请求体 | 只有 `orderId`，**没有 payType**；支付宝/微信等只是本地 UI 单选，不往接口传 |
+| 订单列表三 Tab | 全部=不传 status；待支付=`status=0`；已完成=`status=2`（状态码只有 0/1/2/3） |
+| 取消订单 | 仅待支付可取消；已支付回 `400`"已支付订单不可取消"（说明书的"开场前可取消"作废） |
+| getProductList | `data` 是裸数组；原价键名 `origin_price`（可 null）；`isHot` 是 1/0 |
+| createOrder | 可选传 `totalAmount` 供服务端查变价（不一致回 2003）；最多 4 座；orderId 是 int |
+| 统计接口 | 字段是 totalShows / totalMinutes / totalHours / typeDist / recentList 一族，无月度趋势 |
+| 服务地址 | A 真实服务 `http://A的IP:9000`（Swagger 在 /docs）；本地 mock 用 8000 错开 |
+
+## 一、本地 mock（A 的服务没起来时用）
 
 ```bash
-python tools/mock_server.py            # 默认 8000 端口
-python tools/mock_server.py 8899       # 换端口
+python tools/mock_server.py            # 8000 端口，契约与 A 文档一致
 ```
 
-返回的 JSON 严格照《课程设计说明书》4.2 表8 与 4.3 示例逐字段构造，含
-`code 1001 / 2001 / 2004 / 2005` 四个错误分支，可提前把页面和错误提示全跑通。
+含错误分支触发器：座位 row=99 回 2001；totalAmount 不符回 2003；
+orderId=404 回 2005；不传 token 回 1001。
 
-## 二、跑契约测试（16 个用例）
+## 二、跑契约测试（20 个用例）
 
 ```bash
 ./gradlew :app:testDebugUnitTest --tests "*OrderApiContractTest"
 ```
 
-这些是真实 HTTP 请求，走的就是 `RetrofitClient` 里配好的单例、鉴权拦截器与日志拦截器，
-所以 baseUrl、超时、Authorization 头是否生效会一并验证。
+真实 HTTP 请求，同时验证 RetrofitClient 的单例、鉴权头、超时。
+关键回归点：`payRequest_jsonOnlyHasOrderId` 钉死请求体必须是 `{"orderId":...}`；
+`orderList_threeTabsUnpaidFinishedAll` 钉死 Tab 传值；
+`cancelOrder_paidOrderCode400` 钉死已支付不可取消。
 
-切到 A 的真实服务端：
+连 A 的真实服务（需先 login 拿真 token，改测试里的 tokenProvider）：
 
 ```bash
-./gradlew :app:testDebugUnitTest --tests "*OrderApiContractTest" "-Dorder.baseUrl=http://A的局域网IP:8000/"
+./gradlew :app:testDebugUnitTest --tests "*OrderApiContractTest" "-Dorder.baseUrl=http://A的IP:9000/"
 ```
 
 ## 三、Postman / 浏览器
 
-`tools/postman_collection.json` 导入 Postman，13 个请求（7 个接口正常用例 + 4 个错误码用例 + 列表三 Tab）。
-集合已配 Bearer 鉴权，改右上角环境变量 `baseUrl` 即可切换服务端；
-每个请求也能直接复制 URL 到浏览器地址栏看 JSON（mock 已开 CORS）。
+导入 `tools/postman_collection.json`（14 个请求），改环境变量 `baseUrl` 切换 mock / 真实服务。
+mock 已开 CORS，URL 也可直接粘浏览器验证。
 
-## 四、客户端里怎么接
+## 四、客户端接法
 
 ```kotlin
-// 地址不写死，模拟器用 10.0.2.2，真机用 A 的局域网 IP
+// 模拟器 10.0.2.2:9000，真机用 A 的局域网 IP:9000；本地顶位用 RetrofitClient.MOCK_BASE_URL
 RetrofitClient.init(
-    url = "http://10.0.2.2:8000/",
-    tokenProvider = { 本地存的 token }   // 登录态由成员 B 写入，这里只读
+    url = "http://10.0.2.2:9000/",
+    tokenProvider = { 本地存的 token }   // 登录态由 B 写入，这里只读
 )
 
-// 页面 / ViewModel 里
-val resp = RetrofitClient.orderApi.getProductList(cinemaId = 1)
-if (resp.isSuccess) showList(resp.data!!.items)
-else Toast.makeText(ctx, ApiCode.tip(resp.code), LENGTH_SHORT).show()
+val resp = RetrofitClient.orderApi.getProductList(cinemaId = 1)   // data 是 List<Product>
+if (resp.isSuccess) showList(resp.data.orEmpty())
+else toast(resp.msgText.ifBlank { ApiCode.tip(resp.code) })
 ```
-
-## 五、两个待确认项（阻塞 D2 联调）
-
-1. `payType` 的合法取值说明书未给枚举，代码里暂用 `alipay / wechat / unionpay`，需 A 定稿。
-2. `getOrderList` 的 `status` 参数：三 Tab 用不传 / 0 / 2，"已完成"取 2 还是 1|2 需与 A 对齐。

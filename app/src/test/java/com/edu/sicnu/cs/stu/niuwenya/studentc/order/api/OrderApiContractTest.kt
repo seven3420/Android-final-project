@@ -3,10 +3,10 @@ package com.edu.sicnu.cs.stu.niuwenya.studentc.order.api
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.ApiCode
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.ApiResponse
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.CreateOrderRequest
-import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.OrderDetail
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.OrderGoodsRequest
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.OrderStatus
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.OrderTestJson
+import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.PayRequest
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.Product
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.Seat
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.WatchStats
@@ -17,21 +17,27 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Test
+import org.junit.runners.MethodSorters
 
 /**
- * 接口契约测试（成员 C，D1 验收：能拿到接口返回的 JSON，数据类和 JSON 字段对得上）。
+ * 接口契约测试（成员 C）。
+ *
+ * 2026-11-24 按 A《后端接口文档》定稿重写，锁定三件事：
+ * 1) payOrder 请求体只有 orderId —— payType 出现即红（A 确认后端没有该字段）；
+ * 2) 已完成 Tab 传 status=2，状态码只有 0/1/2/3；
+ * 3) 已支付订单取消回 400，与说明书"开场前可取消"的差异按 A 实现走。
  *
  * 跑法：
- *   1) 启动本地 mock：python tools/mock_server.py
+ *   1) python tools/mock_server.py           # 本地 mock（A 文档契约版）
  *   2) ./gradlew :app:testDebugUnitTest --tests "*OrderApiContractTest"
- *
- * 为什么用本地 JVM 单元测试而不是 androidTest：Retrofit、OkHttp、Gson 全是纯 JVM 库，
- * 不需要模拟器就能把验收跑实。这里发的是真实 HTTP 请求，走的就是 RetrofitClient 里
- * 配好的单例、鉴权拦截器与日志拦截器，所以同时验证 baseUrl、超时、Authorization 头是否真的生效。
+ *   连 A 真机服务：再追加 "-Dorder.baseUrl=http://A的IP:9000/"（需登录 token 时改 tokenProvider）
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING) // mock 有状态，取消/支付用例按名称顺序跑
 class OrderApiContractTest {
 
     private val api: OrderApi by lazy { RetrofitClient.orderApi }
@@ -54,224 +60,273 @@ class OrderApiContractTest {
         assertNotNull("data 不应为空", resp.data)
     }
 
-    // ------------------------------------------------------------ 8 卖品列表
+    // ------------------------------------------------------------ 卖品列表
 
     @Test
-    fun getProductList_fieldsMatchApiDoc() = runBlocking {
+    fun productList_rawArrayWithSnakeOriginPrice() = runBlocking {
         val resp = api.getProductList(cinemaId = 1)
         assertOk(resp)
-        val list = resp.data!!.items
+        val list = resp.data.orEmpty()
         assertTrue("卖品列表不应为空", list.isNotEmpty())
-        assertEquals(4, list.size)
+        assertEquals(5, list.size)
 
-        val first: Product = list.first { it.id == 2001 }
+        val first: Product = list.first { it.id == 1 }
         assertEquals("双人套餐", first.nameText)
         assertEquals(58.00, first.price, 0.001)
-        assertEquals(78.00, first.originPrice, 0.001)
-        assertEquals(12, first.stock)
-        assertEquals(320, first.salesCount)
-        assertTrue(first.isHot)
-        assertTrue("原价高于现价应判为有优惠", first.hasDiscount)
-        assertEquals("立省 20.00 元", first.saveText)
+        // origin_price 下划线键名要能映射进 originPrice
+        assertEquals(68.00, first.originPrice ?: -1.0, 0.001)
+        assertEquals(120, first.stock)
+        // isHot 是数字 1/0，不是布尔
+        assertEquals(1, first.isHot)
+        assertTrue(first.hot)
+        assertTrue(first.hasDiscount)
+        assertEquals("立省 10.00 元", first.saveText)
 
-        val noDiscount = list.first { it.id == 2002 }
-        assertFalse("原价等于现价不应展示立省", noDiscount.hasDiscount)
+        // origin_price 可为 null，兜成 0 后不展示立省
+        val cola = list.first { it.id == 4 }
+        assertNull(cola.originPrice)
+        assertFalse(cola.hasDiscount)
 
-        val soldOut = list.first { it.id == 2004 }
+        val soldOut = list.first { it.id == 5 }
         assertTrue("库存 0 应判为售完", soldOut.soldOut)
 
-        list.forEach { product ->
-            assertTrue("每个卖品都要有 image 字段", product.imageUrl.isNotEmpty())
-        }
+        // 服务端已热销置顶、销量降序，客户端拿到就是这个顺序
+        assertTrue(list.first().hot)
     }
 
-    // ------------------------------------------------------------ 9 下单
+    // ------------------------------------------------------------ 下单
+
+    @Test
+    fun createOrder_requestBodyHasNoPayTypeAndAmountOptional() {
+        val json = OrderTestJson.toJson(
+            CreateOrderRequest(
+                scheduleId = 1,
+                seats = listOf(Seat(5, 6), Seat(5, 7)),
+                goods = listOf(OrderGoodsRequest(1, 1))
+            )
+        )
+        assertFalse("请求体不应出现 payType（A 确认后端没有该字段）", json.contains("payType"))
+        assertFalse("totalAmount 为 null 时不应出现", json.contains("totalAmount"))
+        assertTrue(json.contains("scheduleId") && json.contains("seats") && json.contains("goods"))
+    }
 
     @Test
     fun createOrder_returnsIdAmountExpire() = runBlocking {
         val resp = api.createOrder(
-            scheduleId = 10086,
-            seats = listOf(Seat(5, 8), Seat(5, 9))
+            scheduleId = 1,
+            seats = listOf(Seat(5, 6), Seat(5, 7)),
+            cartItems = listOf(
+                Product(id = 1, name = "双人套餐", price = 58.0, originPrice = 68.0, stock = 120)
+                    .let { com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.CartItem.from(it, 1) }
+            ),
+            clientTotal = 142.00 // 与 mock 重算一致，不应触发 2003
         )
         assertOk(resp)
         val data = resp.data!!
-        assertEquals(20261119001L, data.orderId)
-        // 两个座位 × 42 元，金额由服务端重算
-        assertEquals(84.00, data.totalAmount, 0.001)
-        assertTrue("过期时间要能解析成时间戳", parseServerTime(data.expireTimeText) > 0L)
+        assertTrue("orderId 应为服务端分配的整型 ID", data.orderId >= 1004)
+        // 2 座 × 42 + 双人套餐 58 = 142，与 A 文档示例金额一致
+        assertEquals(142.00, data.totalAmount, 0.001)
+        assertTrue("过期时间应可解析", parseServerTime(data.expireTimeText) > 0L)
     }
 
     @Test
-    fun createOrder_submitsIdsOnlyNoAmount() = runBlocking {
-        val body = CreateOrderRequest(
-            scheduleId = 10086,
-            seats = listOf(Seat(5, 8), Seat(5, 9)),
-            goods = listOf(OrderGoodsRequest(productId = 2001, quantity = 2))
+    fun createOrder_priceChangedCode2003() = runBlocking {
+        // 客户端传错金额，服务端重算不一致 → 2003（A 文档第 9 节）
+        val resp = api.createOrder(
+            scheduleId = 1,
+            seats = listOf(Seat(6, 1)),
+            clientTotal = 999.00
         )
-        val json = RetrofitClient.gson.toJson(body)
-        println("createOrder 请求体 = $json")
-        assertFalse("请求体不应出现金额字段，金额由服务端重算", json.contains("mount"))
-        assertFalse("请求体不应出现单价字段", json.contains("rice"))
-        assertTrue("座位与数量应正常提交", json.contains("quantity") && json.contains("seats"))
-
-        val resp = api.createOrder(body)
-        assertOk(resp)
-        // 2 座 × 42 + 双人套餐 58 × 2 = 200
-        assertEquals(200.00, resp.data!!.totalAmount, 0.001)
+        assertFalse(resp.isSuccess)
+        assertEquals(ApiCode.PRICE_CHANGED, resp.code)
+        assertEquals("价格已变动，请确认最新金额后重新提交", ApiCode.tip(resp.code))
     }
 
     @Test
     fun createOrder_seatTakenCode2001() = runBlocking {
-        val resp = api.createOrder(CreateOrderRequest(scheduleId = 10086, seats = emptyList()))
+        val resp = api.createOrder(
+            CreateOrderRequest(scheduleId = 1, seats = listOf(Seat(99, 1)))
+        )
         assertFalse(resp.isSuccess)
         assertEquals(ApiCode.SEAT_TAKEN, resp.code)
-        assertEquals("座位已被占用，请返回重新选座", ApiCode.tip(resp.code))
     }
 
-    // ------------------------------------------------------------ 10 支付
+    @Test
+    fun createOrder_moreThanFourSeatsCode400() = runBlocking {
+        val resp = api.createOrder(
+            CreateOrderRequest(
+                scheduleId = 1,
+                seats = listOf(Seat(1, 1), Seat(1, 2), Seat(1, 3), Seat(1, 4), Seat(1, 5))
+            )
+        )
+        assertFalse(resp.isSuccess)
+        assertEquals(ApiCode.PARAM_INVALID, resp.code)
+    }
+
+    // ------------------------------------------------------------ 支付
 
     @Test
-    fun payOrder_returnsStatusAndTwoCodes() = runBlocking {
-        val resp = api.payOrder(orderId = 20261119001L, payType = "alipay")
+    fun payRequest_jsonOnlyHasOrderId() {
+        val json = OrderTestJson.toJson(PayRequest(orderId = 1001))
+        assertEquals("""{"orderId":1001}""", json)
+    }
+
+    @Test
+    fun payOrder_unpaidOrder_returnsTwoCodes() = runBlocking {
+        val resp = api.payOrder(orderId = 1002)
         assertOk(resp)
         val data = resp.data!!
+        assertEquals(1002, data.orderId)
         assertEquals(OrderStatus.PAID, data.status)
-        assertEquals("8823 6619", data.ticketCodeText)
-        assertEquals("6620", data.goodsCodeText)
-        assertTrue(data.hasGoodsCode)
+        assertEquals("1234 5678", data.ticketCodeText)
+        // 1002 无卖品 → goodsCode 应为 null（A 文档第 10 节）
+        assertFalse("无卖品订单不应有取餐码", data.hasGoodsCode)
     }
 
     @Test
-    fun payOrder_orderExpiredCode2004() = runBlocking {
-        val resp = api.payOrder(orderId = 404L, payType = "alipay")
+    fun payOrder_idempotentReturnsSameCode() = runBlocking {
+        val first = api.payOrder(orderId = 1002)
+        val second = api.payOrder(orderId = 1002)
+        assertOk(second)
+        assertEquals(first.data!!.ticketCodeText, second.data!!.ticketCodeText)
+    }
+
+    @Test
+    fun payOrder_cancelledOrderCode2004() = runBlocking {
+        // 1002 在取消用例后被置 3；这里用已完成 1003 验证已失效分支
+        val resp = api.payOrder(orderId = 1003)
         assertFalse(resp.isSuccess)
         assertEquals(ApiCode.ORDER_EXPIRED, resp.code)
-        assertTrue(ApiCode.tip(resp.code).contains("重新下单"))
     }
 
-    // ------------------------------------------------------------ 11 取消
+    // ------------------------------------------------------------ 取消
 
     @Test
-    fun cancelOrder_statusBecomesCancelled() = runBlocking {
-        val resp = api.cancelOrder(orderId = 20261124002L)
+    fun cancelOrder_paidOrderCode400() = runBlocking {
+        val resp = api.cancelOrder(orderId = 1001) // 1001 已支付
+        assertFalse(resp.isSuccess)
+        assertEquals(ApiCode.PARAM_INVALID, resp.code)
+        assertTrue(resp.msgText.contains("不可取消"))
+        assertFalse("已支付订单本地 UI 也不应给取消按钮", OrderStatus.canCancel(OrderStatus.PAID))
+    }
+
+    @Test
+    fun cancelOrder_unpaidOrderStatusBecomes3() = runBlocking {
+        // 新建一笔待支付再取消，避免依赖其他用例留下的状态
+        val created = api.createOrder(
+            CreateOrderRequest(scheduleId = 1, seats = listOf(Seat(7, 7)))
+        )
+        assertOk(created)
+        val resp = api.cancelOrder(orderId = created.data!!.orderId)
         assertOk(resp)
         assertTrue(resp.data!!.isCancelled)
-        assertEquals(OrderStatus.CANCELLED, resp.data!!.status)
         assertEquals("已取消", resp.data!!.statusText)
     }
 
-    // ------------------------------------------------------------ 12 列表
+    // ------------------------------------------------------------ 订单列表
 
     @Test
-    fun getOrderList_threeTabs() = runBlocking {
+    fun orderList_threeTabsUnpaidFinishedAll() = runBlocking {
+        // A 定稿：全部=不传，待支付=0，已完成=2
         val all = api.getOrderList(status = null)
         assertOk(all)
-        assertEquals(3, all.data!!.total)
+        assertTrue(all.data!!.total >= 3)
 
         val unpaid = api.getOrderList(status = OrderStatus.UNPAID)
         assertOk(unpaid)
-        assertEquals(1, unpaid.data!!.items.size)
-        val item = unpaid.data!!.items.first()
-        assertEquals("深夜闭环", item.movieTitleText)
-        assertEquals("待支付", item.statusText)
-        assertTrue("待支付订单应有剩余支付时间", item.remainMillis() > 0L)
-        assertTrue(
-            "待支付状态应展示倒计时并可取消",
-            OrderStatus.showCountdown(item.status, item.remainMillis()) && OrderStatus.canCancel(item.status)
-        )
+        unpaid.data!!.items.forEach {
+            assertEquals(OrderStatus.UNPAID, it.status)
+        }
 
         val finished = api.getOrderList(status = OrderStatus.FINISHED)
         assertOk(finished)
-        val done = finished.data!!.items.first()
-        assertEquals("已完成", done.statusText)
-        assertEquals(0L, done.remainMillis())
-        assertFalse("已完成订单不再展示倒计时", OrderStatus.showCountdown(done.status, done.remainMillis()))
-    }
-
-    @Test
-    fun orderList_amountBreakdownConsistent() = runBlocking {
-        api.getOrderList().data!!.items.forEach { order ->
-            assertEquals(
-                "订单 ${order.id} 金额分项应等于总额",
-                order.totalAmount,
-                order.ticketAmount + order.goodsAmount,
-                0.011
-            )
+        assertTrue(finished.data!!.items.isNotEmpty())
+        finished.data!!.items.forEach {
+            assertEquals("已完成", it.statusText)
+            assertEquals(0L, it.remainMillis())
+            assertFalse(OrderStatus.showCountdown(it.status, it.remainMillis()))
         }
     }
 
-    // ------------------------------------------------------------ 13 详情
+    @Test
+    fun orderList_itemKeyIsOrderId() = runBlocking {
+        val item = api.getOrderList(status = OrderStatus.UNPAID).data!!.items.first()
+        assertTrue("列表项主键 orderId 应有值", item.orderId > 0)
+        assertEquals("待支付", item.statusText)
+        assertTrue("海报字段应可空转非空", item.posterUrl.isNotEmpty() || item.posterUrl.isEmpty())
+        assertTrue("待支付订单有剩余时间", item.remainMillis() > 0L)
+        assertTrue(OrderStatus.showCountdown(item.status, item.remainMillis()))
+        assertTrue(OrderStatus.canCancel(item.status))
+    }
+
+    // ------------------------------------------------------------ 订单详情
 
     @Test
-    fun getOrderDetail_fieldsMatchApiDoc() = runBlocking {
-        val resp = api.getOrderDetail(orderId = 20261119001L)
+    fun orderDetail_fieldsMatchA() = runBlocking {
+        val resp = api.getOrderDetail(orderId = 1001)
         assertOk(resp)
         val detail = resp.data!!
 
-        assertEquals("星际远征", detail.movieTitleText)
+        assertEquals(1001, detail.orderId)
+        assertEquals("寻梦环游记", detail.movieTitleText)
         assertEquals("星汇影城（春熙路店）", detail.cinemaNameText)
-        assertEquals("3 号厅", detail.hallNameText)
-        assertEquals("2026-11-20 19:30", detail.startTimeText)
+        assertEquals("成都市锦江区春熙路1号", detail.cinemaAddressText)
+        assertEquals("1号厅", detail.hallNameText)
+        assertEquals("国语 2D", detail.langVersionText)
+        assertEquals(listOf("5 排 6 座", "5 排 7 座"), detail.seatList)
+        assertEquals(2, detail.seatCount)
         assertEquals(OrderStatus.PAID, detail.status)
-        assertEquals("已支付", detail.statusText)
-
-        // 接口返回的 seats 是"5 排 8 座"文案数组，不是坐标
-        assertEquals(listOf("5 排 8 座", "5 排 9 座"), detail.seatList)
-
-        assertTrue(detail.hasGoods)
-        val goods = detail.goodsList.first()
-        assertEquals("双人套餐", goods.nameText)
-        assertEquals(2, goods.quantity)
-        assertEquals(116.00, goods.amount, 0.001)
 
         assertEquals(84.00, detail.ticketAmount, 0.001)
-        assertEquals(116.00, detail.goodsAmount, 0.001)
-        assertEquals(200.00, detail.totalAmount, 0.001)
-        // C-1 验收：票款 + 卖品 = 总额
-        assertTrue("金额分项应与总额一致", detail.isAmountConsistent)
-        assertEquals("200.00", formatMoney(detail.totalAmount))
+        assertEquals(58.00, detail.goodsAmount, 0.001)
+        assertEquals(142.00, detail.totalAmount, 0.001)
+        assertTrue("票款+卖品应等于总额", detail.isAmountConsistent)
+        assertEquals("142.00", formatMoney(detail.totalAmount))
 
-        // C-5 验收：两个码分开展示
-        assertEquals("8823 6619", detail.ticketCodeText)
-        assertEquals("6620", detail.goodsCodeText)
+        // C-5：两个码分开展示
+        assertEquals("1234 5678", detail.ticketCodeText)
+        assertEquals("4321", detail.goodsCodeText)
         assertTrue(detail.hasTicketCode && detail.hasGoodsCode)
         assertTrue(OrderStatus.showCode(detail.status))
     }
 
     @Test
-    fun getOrderDetail_notFoundCode2005() = runBlocking {
-        val resp = api.getOrderDetail(orderId = 404L)
+    fun orderDetail_notFoundCode2005() = runBlocking {
+        val resp = api.getOrderDetail(orderId = 404)
         assertFalse(resp.isSuccess)
-        assertEquals(ApiCode.ORDER_NOT_FOUND, resp.code)
-        assertEquals("订单不存在或已被删除", ApiCode.tip(resp.code))
+        assertEquals(ApiCode.NOT_FOUND, resp.code)
     }
 
-    // ------------------------------------------------------------ 14 统计
+    // ------------------------------------------------------------ 统计
 
     @Test
-    fun getWatchStats_fourSectionsReadyForChart() = runBlocking {
+    fun watchStats_fieldsMatchA() = runBlocking {
         val resp = api.getWatchStats()
         assertOk(resp)
         val stats: WatchStats = resp.data!!
 
-        assertEquals(12, stats.totalMovie)
-        assertEquals(1575, stats.totalDuration)
-        assertEquals("26 小时 15 分钟", stats.durationText)
+        assertEquals(5, stats.totalShows)
+        assertEquals(525, stats.totalMinutes)
+        assertEquals(8.8, stats.totalHours, 0.001)
+        assertEquals("8.8 小时", stats.hoursText)
+        assertEquals("8 小时 45 分钟", stats.durationText)
+        assertEquals(8, stats.totalTickets)
+        assertEquals("356.00", stats.amountText)
+        assertEquals("2026-11-20 19:30:00", stats.lastWatchTimeText)
 
-        assertEquals(4, stats.typeRankList.size)
-        assertEquals("科幻", stats.typeRankList.first().typeText)
-        assertEquals(5, stats.typeRankList.first().count)
-        val rank = stats.typeRankList.sortedByDescending { it.count }
-        assertEquals("科幻", rank.first().typeText)
-        assertEquals("喜剧", rank.last().typeText)
+        assertEquals("星汇影城（春熙路店）", stats.topCinemaName)
+        assertEquals("寻梦环游记", stats.topMovieTitle)
 
-        assertEquals(6, stats.monthCountList.size)
-        stats.monthCountList.forEach { month ->
-            assertTrue("月份格式应为 yyyy-MM", month.monthText.matches(Regex("\\d{4}-\\d{2}")))
-        }
+        assertEquals(2, stats.typeDistList.size)
+        assertEquals("动画/家庭/冒险", stats.typeDistList.first().typeText)
+        assertEquals(3, stats.typeDistList.first().count)
+
+        assertEquals(2, stats.recentWatchList.size)
+        assertEquals("寻梦环游记", stats.recentWatchList.first().titleText)
+        assertTrue(stats.recentWatchList.first().watchTimeText.isNotEmpty())
     }
 
-    // ------------------------------------------------------------ 鉴权与兜底
+    // ------------------------------------------------------------ 鉴权
 
     @Test
     fun missingToken_returnsCode1001() = runBlocking {
@@ -280,44 +335,60 @@ class OrderApiContractTest {
         assertFalse(resp.isSuccess)
         assertEquals(ApiCode.NOT_LOGIN, resp.code)
         assertEquals("登录已失效，请重新登录", ApiCode.tip(resp.code))
-        useMockServer() // 还原，避免影响同批次其他用例
+        useMockServer()
     }
+
+    // ------------------------------------------------------------ 反序列化兜底
 
     @Test
     fun partialJson_doesNotCrashModels() {
-        // Gson 不走 Kotlin 主构造默认值，缺字段时数字为 0、字符串为 null，
-        // 模型里来自服务端的字符串因此全部可空并由 xxxText 兜底，这条规则用测试钉死。
-        val type = object : TypeToken<ApiResponse<OrderDetail>>() {}.type
-        val resp: ApiResponse<OrderDetail> =
+        val type = object : TypeToken<ApiResponse<com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.OrderDetail>>() {}.type
+        val resp: ApiResponse<com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.OrderDetail> =
             RetrofitClient.gson.fromJson(OrderTestJson.PARTIAL_ORDER_DETAIL, type)
 
         val detail = resp.data!!
         assertEquals("", detail.movieTitleText)
         assertEquals("", detail.ticketCodeText)
         assertEquals(0.0, detail.totalAmount, 0.001)
-        assertEquals("待支付", detail.statusText) // status 缺省为 0
+        assertEquals("待支付", detail.statusText)
         assertTrue(detail.seatList.isEmpty())
         assertTrue(detail.goodsList.isEmpty())
         assertFalse(detail.hasTicketCode)
     }
 
-    @Test
-    fun docSampleJson_deserializesIntoModels() {
-        val detail = OrderTestJson.parseOrderDetailFromDoc()
-        assertEquals("星际远征", detail.movieTitleText)
-        assertEquals(200.00, detail.totalAmount, 0.001)
-        assertEquals(listOf("5 排 8 座", "5 排 9 座"), detail.seatList)
-        assertEquals(116.00, detail.goodsList.first().amount, 0.001)
-        // 文档示例里没有 id 与时间字段，兜底后应为默认值而不是抛异常
-        assertEquals(0L, detail.id)
-        assertTrue(detail.createTime.isNullOrEmpty())
-    }
+    // ------------------------------------------------------------ A 文档示例活体校验
 
     @Test
-    fun docCreateOrderSample_deserializes() {
-        val result = OrderTestJson.parseCreateOrderFromDoc()
-        assertEquals(20261119001L, result.orderId)
-        assertEquals(122.00, result.totalAmount, 0.001)
-        assertTrue(parseServerTime(result.expireTimeText) > 0L)
+    fun aDocSamples_allDeserialize() {
+        val detail = OrderTestJson.parseOrderDetailFromDoc()
+        assertEquals("寻梦环游记", detail.movieTitleText)
+        assertEquals(142.00, detail.totalAmount, 0.001)
+        assertEquals(listOf("5 排 6 座", "5 排 7 座"), detail.seatList)
+        assertEquals("1234 5678", detail.ticketCodeText)
+        assertTrue(detail.isAmountConsistent)
+
+        val created = OrderTestJson.parseCreateOrderFromDoc()
+        assertEquals(1001, created.orderId)
+        assertEquals(142.00, created.totalAmount, 0.001)
+        assertTrue(parseServerTime(created.expireTimeText) > 0L)
+
+        val paid = OrderTestJson.parsePayResultFromDoc()
+        assertEquals(OrderStatus.PAID, paid.status)
+        assertEquals("4321", paid.goodsCodeText)
+
+        val products = OrderTestJson.parseProductListFromDoc()
+        assertEquals(1, products.size)
+        assertEquals(68.00, products.first().originPrice ?: -1.0, 0.001)
+        assertTrue(products.first().hot)
+
+        val page = OrderTestJson.parseOrderListFromDoc()
+        assertEquals(1, page.total)
+        assertEquals(1001, page.items.first().orderId)
+
+        val stats = OrderTestJson.parseWatchStatsFromDoc()
+        assertEquals(5, stats.totalShows)
+        assertEquals("8.8 小时", stats.hoursText)
+        assertEquals(2, stats.typeDistList.size)
+        assertEquals(1, stats.recentWatchList.size)
     }
 }

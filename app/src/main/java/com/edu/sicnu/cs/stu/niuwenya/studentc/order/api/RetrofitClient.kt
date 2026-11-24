@@ -23,11 +23,14 @@ import java.util.concurrent.TimeUnit
  */
 object RetrofitClient {
 
-    /** A 的服务端为 Python FastAPI，单文件启动，路径统一 /api/{接口名}。 */
-    const val DEFAULT_BASE_URL = "http://10.0.2.2:8000/"
+    /** A 的 FastAPI 按 README 用 uvicorn --port 9000 启动，路径统一 /api/{接口名}。 */
+    const val DEFAULT_BASE_URL = "http://10.0.2.2:9000/"
 
     /** 模拟器访问宿主机时的地址，真机联调请换成 A 的局域网 IP。 */
-    const val LOCAL_HOST_BASE_URL = "http://127.0.0.1:8000/"
+    const val LOCAL_HOST_BASE_URL = "http://127.0.0.1:9000/"
+
+    /** 本地 mock（tools/mock_server.py）默认端口，与 A 的 9000 错开，可同机并跑。 */
+    const val MOCK_BASE_URL = "http://127.0.0.1:8000/"
 
     private const val TIMEOUT_SECONDS = 15L
 
