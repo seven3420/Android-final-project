@@ -186,6 +186,19 @@ data class PayRequest(
     val payType: String = PayType.ALIPAY
 )
 
+/** POST /api/cancelOrder 请求体。 */
+data class CancelOrderRequest(
+    val orderId: Long = 0L
+)
+
+/** cancelOrder 返回的 data：接口只回 status，取消成功后为 3。 */
+data class CancelResult(
+    val status: Int = 0
+) {
+    val statusText: String get() = OrderStatus.label(status)
+    val isCancelled: Boolean get() = status == OrderStatus.CANCELLED
+}
+
 /** payOrder / cancelOrder 返回的 data：状态迁移结果与两个取货码。 */
 data class PayResult(
     val status: Int = 0,

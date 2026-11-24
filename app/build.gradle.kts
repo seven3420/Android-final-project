@@ -36,6 +36,31 @@ android {
     }
 }
 
+// 单元测试运行环境修正。
+// 有些开发机的系统 PATH 里存在未闭合的引号（例如 "C:\Program Files\...\javapath;D:\java home\jdk\bin"），
+// Gradle 启动测试 JVM 时会把 PATH 拼进 -Djava.library.path，未闭合引号会让后续参数解析错位，
+// 表现为测试进程一启动就报 ClassNotFoundException: home\IntelliJ，用例根本没跑起来。
+// 这里把传入测试进程的 PATH 中的引号剥掉，问题与机器无关，队友拉下来也能直接跑测试。
+tasks.withType<Test>().configureEach {
+    val rawPath = providers.environmentVariable("PATH").getOrElse("")
+    val safePath = rawPath.replace("\"", "")
+    environment("PATH", safePath)
+    // Gradle 会把 java.library.path 以 -D 参数传给测试 JVM，而它的默认值包含整条 PATH；
+    // 去掉引号后重新显式设置，保证拼出来的命令行不再被引号截断。
+    systemProperty("java.library.path", safePath)
+
+    // 本地联调时可用 -Dorder.baseUrl=http://A的局域网IP:8000/ 指向成员 A 的服务端
+    val overrideBaseUrl = providers.systemProperty("order.baseUrl").orNull
+    if (!overrideBaseUrl.isNullOrBlank()) {
+        systemProperty("order.baseUrl", overrideBaseUrl)
+    }
+
+    testLogging {
+        events("passed", "failed", "skipped")
+        showStandardStreams = true
+    }
+}
+
 dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)

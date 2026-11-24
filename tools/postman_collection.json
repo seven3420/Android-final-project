@@ -1,0 +1,132 @@
+{
+  "info": {
+    "name": "电影票订购 App - 交易链路接口（成员C）",
+    "description": "按《课程设计说明书》4.2 表8 逐条对应，覆盖成员 C 负责的 7 个接口。导入 Postman 后：先设环境变量 baseUrl（本地 mock 或 A 的服务端），Authorization 已在各请求配好 Bearer token。除正常用例外，还含 1001 / 2001 / 2004 / 2005 四个错误码用例。",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:8000", "description": "本地 mock 用 8000；连 A 的服务端改成 http://A的局域网IP:端口" },
+    { "key": "token", "value": "demo-token", "description": "登录后拿到则替换" },
+    { "key": "cinemaId", "value": "1" },
+    { "key": "orderId", "value": "20261119001" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "8 getProductList 卖品列表",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/getProductList?cinemaId={{cinemaId}}", "host": ["{{baseUrl}}"], "path": ["api", "getProductList"], "query": [{ "key": "cinemaId", "value": "{{cinemaId}}" }] }
+      }
+    },
+    {
+      "name": "9 createOrder 提交订单",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"scheduleId\": 10086,\n  \"seats\": [ {\"row\": 5, \"col\": 8}, {\"row\": 5, \"col\": 9} ],\n  \"goods\": [ {\"productId\": 2001, \"quantity\": 2} ]\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/createOrder", "host": ["{{baseUrl}}"], "path": ["api", "createOrder"] }
+      }
+    },
+    {
+      "name": "9 createOrder 异常-座位被占2001",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"scheduleId\": 10086,\n  \"seats\": [],\n  \"goods\": []\n}" },
+        "url": { "raw": "{{baseUrl}}/api/createOrder", "host": ["{{baseUrl}}"], "path": ["api", "createOrder"] }
+      }
+    },
+    {
+      "name": "10 payOrder 支付",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"orderId\": 20261119001,\n  \"payType\": \"alipay\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/payOrder", "host": ["{{baseUrl}}"], "path": ["api", "payOrder"] }
+      }
+    },
+    {
+      "name": "10 payOrder 异常-订单失效2004",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"orderId\": 404,\n  \"payType\": \"alipay\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/payOrder", "host": ["{{baseUrl}}"], "path": ["api", "payOrder"] }
+      }
+    },
+    {
+      "name": "11 cancelOrder 取消订单",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"orderId\": 20261124002\n}" },
+        "url": { "raw": "{{baseUrl}}/api/cancelOrder", "host": ["{{baseUrl}}"], "path": ["api", "cancelOrder"] }
+      }
+    },
+    {
+      "name": "12 getOrderList 订单列表-全部",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/getOrderList?pageNum=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "getOrderList"], "query": [{ "key": "pageNum", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+      }
+    },
+    {
+      "name": "12 getOrderList 订单列表-待支付",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/getOrderList?status=0&pageNum=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "getOrderList"], "query": [{ "key": "status", "value": "0" }, { "key": "pageNum", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+      }
+    },
+    {
+      "name": "12 getOrderList 订单列表-已完成",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/getOrderList?status=2&pageNum=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api", "getOrderList"], "query": [{ "key": "status", "value": "2" }, { "key": "pageNum", "value": "1" }, { "key": "pageSize", "value": "10" }] }
+      }
+    },
+    {
+      "name": "13 getOrderDetail 订单详情",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/getOrderDetail?orderId={{orderId}}", "host": ["{{baseUrl}}"], "path": ["api", "getOrderDetail"], "query": [{ "key": "orderId", "value": "{{orderId}}" }] }
+      }
+    },
+    {
+      "name": "13 getOrderDetail 异常-订单不存在2005",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/getOrderDetail?orderId=404", "host": ["{{baseUrl}}"], "path": ["api", "getOrderDetail"], "query": [{ "key": "orderId", "value": "404" }] }
+      }
+    },
+    {
+      "name": "14 getWatchStats 观影统计",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/getWatchStats", "host": ["{{baseUrl}}"], "path": ["api", "getWatchStats"] }
+      }
+    },
+    {
+      "name": "异常-未带token返回1001",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/getProductList?cinemaId=1", "host": ["{{baseUrl}}"], "path": ["api", "getProductList"], "query": [{ "key": "cinemaId", "value": "1" }] }
+      }
+    }
+  ]
+}
