@@ -1,7 +1,7 @@
 """冒烟测试：下单 → 支付 → 观影统计"""
 import urllib.request, json
 
-BASE = "http://127.0.0.1:9001"
+BASE = "http://127.0.0.1:9000"
 
 def post(path, data, token=None):
     body = json.dumps(data).encode()
@@ -39,7 +39,7 @@ print(f"  code={o['code']} msg={o['msg']}")
 if o["code"] != 0:
     print(f"  ❌ {o}")
     exit(1)
-oid = o["data"]["id"]
+oid = o["data"]["orderId"]
 print(f"✅ orderId={oid} totalAmount={o['data']['totalAmount']}")
 
 # 4. 支付
@@ -59,7 +59,7 @@ o2 = post("/api/createOrder", {
 }, token)
 print(f"  code={o2['code']} msg={o2['msg']}")
 if o2["code"] == 0:
-    oid2 = o2["data"]["id"]
+    oid2 = o2["data"]["orderId"]
     p2 = post("/api/payOrder", {"orderId": oid2}, token)
     print(f"✅ 第二单已支付 orderId={oid2}")
 
