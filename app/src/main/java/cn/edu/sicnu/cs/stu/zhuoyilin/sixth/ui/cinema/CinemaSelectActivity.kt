@@ -98,6 +98,7 @@ class CinemaSelectActivity : BaseActivity() {
                 .putExtra(SeatSelectActivity.EXTRA_CINEMA_NAME, cinemaName)
                 .putExtra(SeatSelectActivity.EXTRA_HALL_NAME, schedule.hallName)
                 .putExtra(SeatSelectActivity.EXTRA_START_TIME, schedule.startTime)
+                .putExtra(SeatSelectActivity.EXTRA_TICKET_PRICE, schedule.price)
         )
     }
 }
