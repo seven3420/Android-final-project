@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel : BaseViewModel() {
 
-    // 登录失败返回 401 时不能触发“跳转登录页”，否则会一直重定向
+    // 登录失败返回 1001 时不能触发“跳转登录页”，否则会一直重定向
     override val autoHandleTokenExpired: Boolean = false
 
     private val _uiState = MutableLiveData<LoginUiState>(LoginUiState.Idle)

@@ -19,7 +19,7 @@ import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.cache.entity.MoviePageEntity
         MoviePageEntity::class,
         CinemaEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

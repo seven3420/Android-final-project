@@ -15,7 +15,7 @@ class TokenInterceptor(private val context: Context) : Interceptor {
 
         val newRequest = if (!token.isNullOrEmpty()) {
             originalRequest.newBuilder()
-                .header("Authorization", token)
+                .header("Authorization", "Bearer $token")
                 .build()
         } else {
             originalRequest

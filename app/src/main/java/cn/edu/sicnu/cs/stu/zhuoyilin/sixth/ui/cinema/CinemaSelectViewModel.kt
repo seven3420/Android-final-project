@@ -67,7 +67,7 @@ class CinemaSelectViewModel : BaseViewModel() {
 
         viewModelScope.launch {
             // 先查 Room 缓存，有则立即展示
-            val cached = withContext(Dispatchers.IO) { CacheModule.cinemaDao.queryAll() }
+            val cached = withContext(Dispatchers.IO) { CacheModule.cinemaDao.queryByMovie(movieId) }
             if (cached.isNotEmpty()) {
                 val firstId = cached.first().cinemaId
                 val selectedId = if (current.selectedCinemaId == 0) firstId else current.selectedCinemaId
@@ -79,11 +79,17 @@ class CinemaSelectViewModel : BaseViewModel() {
             }
 
             try {
-                val cinemas = executeRequest { RetrofitClient.apiService.getCinemaList() }
+                val cinemaPage = executeRequest {
+                    RetrofitClient.apiService.getCinemaList(movieId, pageNum = 1, pageSize = 20)
+                }
+                val cinemas = cinemaPage.list
 
-                // 写入 Room 缓存（全量覆盖）
+                // 覆盖当前影片的 Room 缓存
                 withContext(Dispatchers.IO) {
-                    CacheModule.cinemaDao.replaceAll(cinemas.map { it.toEntity() })
+                    CacheModule.cinemaDao.replaceByMovie(
+                        movieId,
+                        cinemas.map { it.toEntity(movieId) }
+                    )
                 }
 
                 val first = cinemas.firstOrNull()
@@ -104,7 +110,7 @@ class CinemaSelectViewModel : BaseViewModel() {
                 }
             } catch (e: ApiException) {
                 val fallback = (_state.value?.cinemas?.takeIf { it.isNotEmpty() })
-                    ?: withContext(Dispatchers.IO) { CacheModule.cinemaDao.queryAll().map { it.toModel() } }
+                    ?: withContext(Dispatchers.IO) { CacheModule.cinemaDao.queryByMovie(movieId).map { it.toModel() } }
                 val isNetworkDown = e.code == ErrorCode.NETWORK_ERROR
 
                 val first = fallback.firstOrNull()

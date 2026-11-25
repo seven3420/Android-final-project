@@ -15,6 +15,11 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val apiOrigin = ((project.findProperty("API_ORIGIN") as? String)
+            ?: "http://172.20.10.3:9000").trimEnd('/')
+        buildConfigField("String", "API_ORIGIN", "\"$apiOrigin\"")
+        buildConfigField("String", "API_BASE_URL", "\"$apiOrigin/api/\"")
     }
 
     buildTypes {
@@ -28,6 +33,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 

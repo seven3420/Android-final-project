@@ -11,6 +11,11 @@ data class Cinema(
     val address: String = ""
 )
 
+data class CinemaPage(
+    val list: List<Cinema> = emptyList(),
+    val total: Int = 0
+)
+
 data class Schedule(
     @SerializedName(value = "scheduleId", alternate = ["id"])
     val scheduleId: Int = 0,
@@ -24,7 +29,7 @@ data class Schedule(
     val price: Double = 0.0,
     @SerializedName(value = "hallName", alternate = ["hall"])
     val hallName: String = "",
-    @SerializedName(value = "remainingSeats", alternate = ["remainSeats", "availableSeats"])
+    @SerializedName(value = "remainingSeats", alternate = ["leftSeat", "remainSeats", "availableSeats"])
     val remainingSeats: Int = -1,
     @SerializedName(value = "totalSeats", alternate = ["seatCount"])
     val totalSeats: Int = 0,
