@@ -1,10 +1,13 @@
 package cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.exception
 
 object ErrorCode {
-    const val SUCCESS = 200
+    const val SUCCESS = 0
 
-    /** token 失效，B-2 统一跳登录页 */
-    const val TOKEN_INVALID = 401
+    /** HTTP 传输层鉴权失败 */
+    const val HTTP_UNAUTHORIZED = 401
+
+    /** A 组业务 token 失效，B-2 统一跳登录页 */
+    const val TOKEN_INVALID = 1001
 
     /** 座位冲突，由 A 组定义 */
     const val SEAT_CONFLICT = 2001

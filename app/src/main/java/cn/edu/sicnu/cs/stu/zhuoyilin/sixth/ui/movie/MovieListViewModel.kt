@@ -109,8 +109,9 @@ class MovieListViewModel : BaseViewModel() {
             }
 
             try {
+                val status = if (type == TYPE_SHOWING) "now" else "soon"
                 val pageData = executeRequest {
-                    RetrofitClient.apiService.getMovieList(requestPage, type)
+                    RetrofitClient.apiService.getMovieList(status, requestPage, PAGE_SIZE)
                 }
                 if (token != requestToken) return@launch
 

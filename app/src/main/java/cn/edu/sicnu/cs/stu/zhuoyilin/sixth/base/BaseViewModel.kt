@@ -14,14 +14,14 @@ import java.io.IOException
 open class BaseViewModel : ViewModel() {
 
     /**
-     * 登录页等场景可置为 false，避免登录失败（401）时又触发跳转登录页。
+     * 登录页等场景可置为 false，避免登录失败（1001）时又触发跳转登录页。
      */
     open val autoHandleTokenExpired: Boolean = true
 
     /**
      * 统一执行网络请求：
-     * 1. HTTP 401 / code 401 -> 清 token 并跳登录页，抛 ApiException(401)
-     * 2. code != 200 -> ApiException(code, msg)
+     * 1. HTTP 401 / code 1001 -> 清 token 并跳登录页，抛 ApiException(1001)
+     * 2. code != 0 -> ApiException(code, msg)
      * 3. 网络/解析异常统一转成 ApiException，UI 层只需要 catch ApiException
      */
     protected suspend fun <T> executeRequest(
@@ -31,7 +31,7 @@ open class BaseViewModel : ViewModel() {
             val response = block()
             val body = response.body()
 
-            if (response.code() == ErrorCode.TOKEN_INVALID) {
+            if (response.code() == ErrorCode.HTTP_UNAUTHORIZED) {
                 onTokenInvalid(body?.msg)
             }
             if (!response.isSuccessful) {
@@ -47,7 +47,7 @@ open class BaseViewModel : ViewModel() {
                 throw ApiException(body.code, body.msg.ifEmpty { "请求失败" })
             }
 
-            body.data ?: throw ApiException(body.code, "data 为空")
+            body.data ?: throw ApiException(ErrorCode.PARSE_ERROR, "data 为空")
         } catch (e: ApiException) {
             throw e
         } catch (e: CancellationException) {

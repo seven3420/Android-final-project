@@ -1,11 +1,11 @@
 package cn.edu.sicnu.cs.stu.zhuoyilin.sixth.cache.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "cinemas")
+@Entity(tableName = "cinemas", primaryKeys = ["movieId", "cinemaId"])
 data class CinemaEntity(
-    @PrimaryKey val cinemaId: Int,
+    val movieId: Int,
+    val cinemaId: Int,
     val name: String,
     val address: String,
     val cachedAt: Long = System.currentTimeMillis()

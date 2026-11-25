@@ -18,7 +18,7 @@ class SplashViewModel : BaseViewModel() {
             val response = RetrofitClient.apiService.getUserInfo()
             val body = response.body()
             when {
-                response.code() == ErrorCode.TOKEN_INVALID -> false
+                response.code() == ErrorCode.HTTP_UNAUTHORIZED -> false
                 body != null && body.code == ErrorCode.TOKEN_INVALID -> false
                 else -> true
             }

@@ -77,7 +77,8 @@ fun Movie.toDetailEntity(): MovieDetailEntity = MovieDetailEntity(
 )
 
 // ---- Cinema 转换 ----
-fun Cinema.toEntity(): CinemaEntity = CinemaEntity(
+fun Cinema.toEntity(movieId: Int): CinemaEntity = CinemaEntity(
+    movieId = movieId,
     cinemaId = cinemaId,
     name = name,
     address = address

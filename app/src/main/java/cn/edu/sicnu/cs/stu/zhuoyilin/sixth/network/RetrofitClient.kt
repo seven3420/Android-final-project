@@ -1,7 +1,10 @@
 package cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network
 
 import android.content.Context
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.BuildConfig
 import com.google.gson.GsonBuilder
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -9,19 +12,25 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
-    /**
-     * 开发阶段地址：10.0.2.2 是 Android 模拟器访问电脑本机的别名。
-     * 真机调试时改为电脑局域网 IP，且结尾必须带 "/"。
-     */
-    private const val BASE_URL = "http://10.0.2.2:8080/"
+    private val apiOrigin = BuildConfig.API_ORIGIN.toHttpUrl()
 
-    /**
-     * 后端返回相对路径（如 /images/a.jpg）时补全为完整地址，已带 http(s) 的原样返回。
-     */
+    /** 将后端相对图片路径补全，并避免 localhost 指向手机自身。 */
     fun resolveUrl(path: String?): String? {
         if (path.isNullOrBlank()) return null
-        if (path.startsWith("http://") || path.startsWith("https://")) return path
-        return BASE_URL.trimEnd('/') + "/" + path.trimStart('/')
+
+        val absoluteUrl = path.toHttpUrlOrNull()
+        if (absoluteUrl != null) {
+            if (absoluteUrl.host != "localhost" && absoluteUrl.host != "127.0.0.1") return path
+            return absoluteUrl.newBuilder()
+                .scheme(apiOrigin.scheme)
+                .host(apiOrigin.host)
+                .port(apiOrigin.port)
+                .build()
+                .toString()
+        }
+
+        return apiOrigin.resolve(path)?.toString()
+            ?: apiOrigin.toString().trimEnd('/') + "/" + path.trimStart('/')
     }
 
     lateinit var apiService: ApiService
@@ -45,7 +54,7 @@ object RetrofitClient {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
