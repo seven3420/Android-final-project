@@ -1,10 +1,12 @@
 package com.edu.sicnu.cs.stu.niuwenya.studentc
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,5 +18,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // 临时测试跳转，第7天删掉
+        startActivity(Intent(this, OrderConfirmActivity::class.java))
     }
 }
