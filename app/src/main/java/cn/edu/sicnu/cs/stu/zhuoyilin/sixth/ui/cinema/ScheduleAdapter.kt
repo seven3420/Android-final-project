@@ -1,9 +1,10 @@
 package cn.edu.sicnu.cs.stu.zhuoyilin.sixth.ui.cinema
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.R
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.databinding.ItemScheduleBinding
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.Schedule
 import java.util.Locale
@@ -51,22 +52,39 @@ class ScheduleAdapter(
                 "价格待定"
             }
 
+            val context = binding.root.context
+            binding.tvScheduleTime.setTextColor(
+                ContextCompat.getColor(context, if (soldOut) R.color.text_disabled else R.color.text_primary)
+            )
+            binding.tvScheduleHall.setTextColor(
+                ContextCompat.getColor(context, if (soldOut) R.color.text_disabled else R.color.text_secondary)
+            )
+            binding.tvSchedulePrice.setTextColor(
+                ContextCompat.getColor(context, if (soldOut) R.color.text_disabled else R.color.accent_clay)
+            )
+
             when {
                 soldOut -> {
                     binding.tvScheduleSeats.text = "已售罄"
-                    binding.tvScheduleSeats.setTextColor(Color.GRAY)
+                    binding.tvScheduleSeats.setTextColor(
+                        ContextCompat.getColor(context, R.color.text_disabled)
+                    )
                 }
                 schedule.remainingSeats >= 0 -> {
                     binding.tvScheduleSeats.text = "余票 ${schedule.remainingSeats}"
-                    binding.tvScheduleSeats.setTextColor(Color.parseColor("#FF9800"))
+                    binding.tvScheduleSeats.setTextColor(
+                        ContextCompat.getColor(context, R.color.sage_dark)
+                    )
                 }
                 else -> {
                     binding.tvScheduleSeats.text = "可售"
-                    binding.tvScheduleSeats.setTextColor(Color.parseColor("#FF9800"))
+                    binding.tvScheduleSeats.setTextColor(
+                        ContextCompat.getColor(context, R.color.sage_dark)
+                    )
                 }
             }
 
-            binding.root.alpha = if (soldOut) 0.45f else 1f
+            binding.root.alpha = 1f
             binding.root.isClickable = !soldOut
             binding.root.setOnClickListener {
                 if (!soldOut) onSelect(schedule)

@@ -73,8 +73,8 @@ class MovieDetailActivity : BaseActivity() {
 
         binding.ivPoster.load(RetrofitClient.resolveUrl(movie.poster)) {
             crossfade(true)
-            placeholder(cn.edu.sicnu.cs.stu.zhuoyilin.sixth.R.color.purple_200)
-            error(cn.edu.sicnu.cs.stu.zhuoyilin.sixth.R.color.purple_200)
+            placeholder(cn.edu.sicnu.cs.stu.zhuoyilin.sixth.R.color.poster_placeholder)
+            error(cn.edu.sicnu.cs.stu.zhuoyilin.sixth.R.color.poster_placeholder)
         }
 
         binding.btnChooseCinema.isEnabled = true

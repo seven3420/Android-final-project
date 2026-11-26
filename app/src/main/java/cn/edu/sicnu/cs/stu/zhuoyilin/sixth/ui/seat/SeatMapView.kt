@@ -2,13 +2,14 @@ package cn.edu.sicnu.cs.stu.zhuoyilin.sixth.ui.seat
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.content.ContextCompat
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.R
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.network.model.Seat
 import kotlin.math.max
 import kotlin.math.min
@@ -23,22 +24,26 @@ class SeatMapView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private val density = resources.displayMetrics.density
+    private val selectedSeatColor = resourceColor(R.color.seat_selected)
+    private val soldSeatColor = resourceColor(R.color.seat_sold)
+    private val lockedSeatColor = resourceColor(R.color.seat_locked)
+    private val availableSeatColor = resourceColor(R.color.seat_available)
 
     private val seatPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val seatStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = dp(1f)
-        color = Color.parseColor("#FFC8C8C8")
+        color = resourceColor(R.color.seat_stroke)
     }
     private val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
         textSize = dp(11f)
-        color = Color.parseColor("#FF757575")
+        color = resourceColor(R.color.text_secondary)
     }
     private val aislePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeWidth = dp(1.5f)
-        color = Color.parseColor("#FFBDBDBD")
+        color = resourceColor(R.color.aisle)
         pathEffect = DashPathEffect(floatArrayOf(dp(6f), dp(6f)), 0f)
     }
 
@@ -160,19 +165,19 @@ class SeatMapView @JvmOverloads constructor(
             val selected = seat.key in selectedKeys
             when {
                 selected -> {
-                    seatPaint.color = Color.parseColor("#FF6200EE")
+                    seatPaint.color = selectedSeatColor
                     canvas.drawRoundRect(rect, radius, radius, seatPaint)
                 }
                 seat.isSold -> {
-                    seatPaint.color = Color.parseColor("#FFBDBDBD")
+                    seatPaint.color = soldSeatColor
                     canvas.drawRoundRect(rect, radius, radius, seatPaint)
                 }
                 seat.isLocked -> {
-                    seatPaint.color = Color.parseColor("#FFE53935")
+                    seatPaint.color = lockedSeatColor
                     canvas.drawRoundRect(rect, radius, radius, seatPaint)
                 }
                 else -> {
-                    seatPaint.color = Color.parseColor("#FFFAFAFA")
+                    seatPaint.color = availableSeatColor
                     canvas.drawRoundRect(rect, radius, radius, seatPaint)
                     canvas.drawRoundRect(rect, radius, radius, seatStrokePaint)
                 }
@@ -219,6 +224,8 @@ class SeatMapView @JvmOverloads constructor(
     ): Float {
         return startX + (col - 1) * cellSize + if (col > leftCount) aisleWidth else 0f
     }
+
+    private fun resourceColor(colorRes: Int): Int = ContextCompat.getColor(context, colorRes)
 
     private fun dp(value: Float): Float = value * density
 }

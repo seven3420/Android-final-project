@@ -74,8 +74,8 @@ class MovieAdapter(
 
             binding.ivPoster.load(RetrofitClient.resolveUrl(movie.poster)) {
                 crossfade(true)
-                placeholder(R.color.purple_200)
-                error(R.color.purple_200)
+                placeholder(R.color.poster_placeholder)
+                error(R.color.poster_placeholder)
             }
 
             binding.root.setOnClickListener { onClick(movie) }

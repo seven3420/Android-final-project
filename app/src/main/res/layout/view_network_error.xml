@@ -7,16 +7,27 @@
     android:padding="32dp">
 
     <TextView
+        style="@style/TextAppearance.Sixth.Section"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="网络异常"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
+
+    <TextView
+        style="@style/TextAppearance.Sixth.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="请检查网络连接后重试"
+        android:textSize="14sp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_retry"
+        style="@style/Widget.Sixth.Button.Outlined"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_height="@dimen/button_secondary_height"
+        android:layout_marginTop="16dp"
+        android:minWidth="120dp"
         android:text="重试" />
 
 </LinearLayout>
