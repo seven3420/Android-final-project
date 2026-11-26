@@ -6,68 +6,98 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5">
 
-    <!-- ===== 顶部：收货地址栏 ===== -->
+    <!-- ===== 顶部：影片与场次信息 ===== -->
     <LinearLayout
-        android:id="@+id/layoutAddress"
+        android:id="@+id/layoutMovieInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="16dp"
         android:background="@android:color/white"
-        android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/ivAddressIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@android:drawable/ic_menu_mylocation"
-            android:contentDescription="地址图标" />
+        <TextView
+            android:id="@+id/tvMovieTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="影片名称"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#222222" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvCinemaHall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="影院 · 影厅"
+            android:textSize="13sp"
+            android:textColor="#666666" />
+
+        <TextView
+            android:id="@+id/tvShowTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="开场时间 · 语言版本"
+            android:textSize="13sp"
+            android:textColor="#666666" />
+
+        <TextView
+            android:id="@+id/tvSeatInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="座位：未选座"
+            android:textSize="13sp"
+            android:textColor="#333333" />
+    </LinearLayout>
+
+    <!-- ===== 卖品区标题栏 ===== -->
+    <LinearLayout
+        android:id="@+id/layoutGoodsHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/layoutMovieInfo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="卖品"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#333333" />
+
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="12dp">
-
-            <TextView
-                android:id="@+id/tvUserName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="未设置收货地址"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#333333" />
-
-            <TextView
-                android:id="@+id/tvUserAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="点击设置收货地址"
-                android:textSize="13sp"
-                android:textColor="#999999"
-                android:layout_marginTop="2dp" />
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@android:drawable/ic_media_next"
-            android:contentDescription="箭头" />
+            android:layout_marginStart="8dp"
+            android:text="随电影票一起支付，不支持单独下单"
+            android:textSize="12sp"
+            android:textColor="#999999" />
     </LinearLayout>
 
-    <!-- ===== 中部：商品列表 ===== -->
+    <!-- ===== 中部：卖品清单 ===== -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvProducts"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/layoutAddress"
+        android:background="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/layoutGoodsHeader"
         app:layout_constraintBottom_toTopOf="@id/layoutBottom"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
