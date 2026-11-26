@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 全页统一的间距、圆角与触控尺寸。 -->
+    <dimen name="page_padding">16dp</dimen>
+    <dimen name="page_padding_large">20dp</dimen>
+    <dimen name="content_spacing">8dp</dimen>
+    <dimen name="content_spacing_large">12dp</dimen>
+    <dimen name="section_spacing">24dp</dimen>
+    <dimen name="card_radius">16dp</dimen>
+    <dimen name="card_elevation">1dp</dimen>
+    <dimen name="button_radius">14dp</dimen>
+    <dimen name="button_primary_height">52dp</dimen>
+    <dimen name="button_secondary_height">48dp</dimen>
+</resources>

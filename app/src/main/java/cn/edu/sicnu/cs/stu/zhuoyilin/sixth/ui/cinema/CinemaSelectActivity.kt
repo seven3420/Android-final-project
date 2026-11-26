@@ -58,10 +58,12 @@ class CinemaSelectActivity : BaseActivity() {
         binding.rvDates.adapter = dateAdapter
 
         binding.rvCinemas.layoutManager = LinearLayoutManager(this)
+        binding.rvCinemas.isNestedScrollingEnabled = false
         cinemaAdapter = CinemaAdapter { cinema -> viewModel.selectCinema(cinema.cinemaId) }
         binding.rvCinemas.adapter = cinemaAdapter
 
         binding.rvSchedules.layoutManager = LinearLayoutManager(this)
+        binding.rvSchedules.isNestedScrollingEnabled = false
         scheduleAdapter = ScheduleAdapter { schedule -> openSeatSelection(schedule) }
         binding.rvSchedules.adapter = scheduleAdapter
     }

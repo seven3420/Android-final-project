@@ -1,6 +1,5 @@
 package cn.edu.sicnu.cs.stu.zhuoyilin.sixth.ui.cinema
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -45,11 +44,10 @@ class CinemaAdapter(
 
             val density = binding.root.resources.displayMetrics.density
             binding.root.strokeWidth = ((if (selected) 2 else 1) * density).toInt()
-            binding.root.strokeColor = if (selected) {
-                ContextCompat.getColor(binding.root.context, R.color.purple_500)
-            } else {
-                Color.parseColor("#33000000")
-            }
+            binding.root.strokeColor = ContextCompat.getColor(
+                binding.root.context,
+                if (selected) R.color.primary else R.color.outline
+            )
 
             binding.root.setOnClickListener { onClick(cinema) }
         }

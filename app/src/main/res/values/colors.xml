@@ -2,7 +2,30 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="teal_200">#FF03DAC5</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="window_background">#F5F2EC</color>
+    <color name="surface">#FCFAF6</color>
+    <color name="surface_variant">#E9E5DE</color>
+    <color name="primary">#596B73</color>
+    <color name="primary_container">#DCE3E4</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="sage_dark">#53634F</color>
+    <color name="sage_soft">#DDE3DA</color>
+    <color name="accent_rose_soft">#E7D8D4</color>
+    <color name="accent_clay">#945F50</color>
+    <color name="text_primary">#303534</color>
+    <color name="text_secondary">#626660</color>
+    <color name="text_disabled">#858983</color>
+    <color name="outline">#C9C5BB</color>
+    <color name="divider">#DEDAD2</color>
+    <color name="error">#A0524D</color>
+    <color name="poster_placeholder">#E9E5DE</color>
+
+    <color name="seat_available">#FCFAF6</color>
+    <color name="seat_selected">#596B73</color>
+    <color name="seat_sold">#B9BDB8</color>
+    <color name="seat_locked">#B97B6D</color>
+    <color name="seat_stroke">#858D88</color>
+    <color name="aisle">#C9C5BB</color>
 </resources>

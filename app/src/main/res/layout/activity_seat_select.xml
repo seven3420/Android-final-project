@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/window_background"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -10,30 +11,31 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@color/surface"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:navigationIconTint="?attr/colorOnSurface"
-        app:title="选择座位" />
+        app:navigationIconTint="@color/text_primary"
+        app:title="选择座位"
+        app:titleTextColor="@color/text_primary" />
 
     <TextView
         android:id="@+id/tvMovieInfo"
+        style="@style/TextAppearance.Sixth.Caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:lineSpacingExtra="2dp"
-        android:paddingStart="16dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="13sp" />
+        android:lineSpacingExtra="3dp"
+        android:paddingStart="20dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp">
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="10dp">
 
         <View
             android:layout_width="14dp"
@@ -42,11 +44,25 @@
             android:background="@drawable/bg_seat_available" />
 
         <TextView
+            style="@style/TextAppearance.Sixth.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="12dp"
             android:text="可选"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/bg_seat_selected" />
+
+        <TextView
+            style="@style/TextAppearance.Sixth.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="已选"
             android:textSize="12sp" />
 
         <View
@@ -56,11 +72,11 @@
             android:background="@drawable/bg_seat_sold" />
 
         <TextView
+            style="@style/TextAppearance.Sixth.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="12dp"
             android:text="已售"
-            android:textColor="?android:attr/textColorSecondary"
             android:textSize="12sp" />
 
         <View
@@ -70,10 +86,10 @@
             android:background="@drawable/bg_seat_locked" />
 
         <TextView
+            style="@style/TextAppearance.Sixth.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="已锁定"
-            android:textColor="?android:attr/textColorSecondary"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -82,19 +98,26 @@
         android:layout_width="220dp"
         android:layout_height="32dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="12dp"
         android:background="@drawable/bg_screen_bar"
         android:gravity="center"
-        android:letterSpacing="0.3"
+        android:letterSpacing="0.25"
         android:text="大  屏"
-        android:textColor="@color/purple_500"
+        android:textColor="@color/primary"
         android:textSize="13sp"
         android:textStyle="bold" />
 
-    <FrameLayout
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.Sixth.Card"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/divider"
+        app:strokeWidth="1dp">
 
         <cn.edu.sicnu.cs.stu.zhuoyilin.sixth.ui.seat.SeatMapView
             android:id="@+id/seatMapView"
@@ -125,23 +148,23 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-    </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#1F000000" />
+        android:background="@color/divider" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSurface"
+        android:background="@color/surface"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="16dp"
-        android:paddingTop="10dp"
+        android:paddingTop="12dp"
         android:paddingEnd="16dp"
-        android:paddingBottom="10dp">
+        android:paddingBottom="12dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -151,31 +174,30 @@
 
             <TextView
                 android:id="@+id/tvSelectedCount"
+                style="@style/TextAppearance.Sixth.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="已选 0/4"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="13sp" />
+                android:text="已选 0/4" />
 
             <TextView
                 android:id="@+id/tvSelectedSeats"
+                style="@style/TextAppearance.Sixth.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="3dp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text="座位：未选择"
-                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tvTotalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="3dp"
                 android:text="合计 ¥0.0"
-                android:textColor="@color/purple_500"
-                android:textSize="20sp"
+                android:textColor="@color/accent_clay"
+                android:textSize="21sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -183,7 +205,9 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmit"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/button_primary_height"
+            android:layout_marginStart="12dp"
+            android:minWidth="112dp"
             android:text="提交选座"
             android:textSize="15sp" />
 

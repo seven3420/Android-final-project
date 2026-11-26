@@ -3,14 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/window_background"
     android:orientation="vertical">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/surface"
         app:tabGravity="fill"
-        app:tabMode="fixed" />
+        app:tabIndicatorColor="@color/primary"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="fixed"
+        app:tabRippleColor="@color/primary_container"
+        app:tabSelectedTextColor="@color/primary"
+        app:tabTextAppearance="@style/TextAppearance.Sixth.Body"
+        app:tabTextColor="@color/tab_text_color" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -27,10 +35,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingStart="12dp"
+                android:paddingStart="16dp"
                 android:paddingTop="8dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="8dp" />
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
