@@ -29,6 +29,14 @@
         <activity
             android:name=".order.OrderConfirmActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".order.OrderListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".order.OrderDetailActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

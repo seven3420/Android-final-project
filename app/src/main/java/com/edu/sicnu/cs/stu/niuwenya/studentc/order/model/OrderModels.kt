@@ -357,6 +357,10 @@ data class OrderDetail(
 
     /** 票款加卖品应等于总额，用于详情页的分项一致性自检（C-1 验收同款口径）。 */
     val isAmountConsistent: Boolean get() = kotlin.math.abs(totalAmount - (ticketAmount + goodsAmount)) < 0.01
+
+    /** 剩余支付毫秒数，倒计时结束后显示为已超时。 */
+    fun remainMillis(now: Long = System.currentTimeMillis()): Long =
+        (parseServerTime(expireTime) - now).coerceAtLeast(0L)
 }
 
 // ---------------------------------------------------------------- 观影统计

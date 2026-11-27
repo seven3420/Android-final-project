@@ -32,6 +32,12 @@ object RetrofitClient {
     /** 本地 mock（tools/mock_server.py）默认端口，与 A 的 9000 错开，可同机并跑。 */
     const val MOCK_BASE_URL = "http://127.0.0.1:8000/"
 
+    /**
+     * 登录页由 B 负责，接入前交易链路要能单独联调，这里先给一个演示 token 顶位。
+     * B 的登录态就绪后调用 [init] 注入真实 tokenProvider 即覆盖，不影响页面代码。
+     */
+    const val DEMO_TOKEN = "demo-token"
+
     private const val TIMEOUT_SECONDS = 15L
 
     /** 运行时可配置的服务端地址，默认指向 A 的机器。 */
@@ -43,7 +49,7 @@ object RetrofitClient {
      * 用回调注入而不是直接依赖 B 的存储类，避免两个客户端模块互相依赖。
      */
     @Volatile
-    private var tokenProvider: (() -> String?)? = null
+    private var tokenProvider: (() -> String?)? = { DEMO_TOKEN }
 
     /** 联调时改服务端地址；传入地址需以 / 结尾，否则 Retrofit 拼路径会丢一段。 */
     fun init(url: String, tokenProvider: (() -> String?)? = null) {
