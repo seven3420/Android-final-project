@@ -55,6 +55,16 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".user.RegisterActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".user.ForgotPasswordActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".user.ProfileActivity"
             android:exported="false" />
 
