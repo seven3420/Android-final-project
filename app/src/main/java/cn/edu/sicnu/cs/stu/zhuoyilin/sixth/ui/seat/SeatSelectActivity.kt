@@ -30,6 +30,7 @@ class SeatSelectActivity : BaseActivity() {
     private var cinemaName: String = ""
     private var hallName: String = ""
     private var startTime: String = ""
+    private var ticketPrice: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +44,7 @@ class SeatSelectActivity : BaseActivity() {
         cinemaName = intent.getStringExtra(EXTRA_CINEMA_NAME).orEmpty()
         hallName = intent.getStringExtra(EXTRA_HALL_NAME).orEmpty()
         startTime = intent.getStringExtra(EXTRA_START_TIME).orEmpty()
-        val ticketPrice = intent.getDoubleExtra(EXTRA_TICKET_PRICE, 0.0)
+        ticketPrice = intent.getDoubleExtra(EXTRA_TICKET_PRICE, 0.0)
 
         if (scheduleId <= 0) {
             ToastUtil.showShort(this, "场次信息不完整")
@@ -119,18 +120,38 @@ class SeatSelectActivity : BaseActivity() {
             if (payload == null) return@observe
             viewModel.consumeNavigate()
             startActivity(
-                Intent(this, OrderConfirmActivity::class.java).apply {
-                    putExtra(OrderConfirmContract.EXTRA_SCHEDULE_ID, payload.scheduleId)
-                    putExtra(OrderConfirmContract.EXTRA_SEAT_IDS, payload.seatIds.toIntArray())
-                    putStringArrayListExtra(
-                        OrderConfirmContract.EXTRA_SEAT_LABELS,
-                        ArrayList(payload.seatLabels)
+                Intent(
+                    this,
+                    com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity::class.java
+                ).apply {
+                    putExtra(
+                        com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity.EXTRA_SCHEDULE_ID,
+                        payload.scheduleId
                     )
-                    putExtra(OrderConfirmContract.EXTRA_TOTAL_PRICE, payload.totalPrice)
-                    putExtra(OrderConfirmContract.EXTRA_MOVIE_TITLE, movieTitle)
-                    putExtra(OrderConfirmContract.EXTRA_CINEMA_NAME, cinemaName)
-                    putExtra(OrderConfirmContract.EXTRA_HALL_NAME, hallName)
-                    putExtra(OrderConfirmContract.EXTRA_START_TIME, startTime)
+                    putExtra(
+                        com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity.EXTRA_SEAT_ROWS,
+                        payload.seatRows.toIntArray()
+                    )
+                    putExtra(
+                        com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity.EXTRA_SEAT_COLS,
+                        payload.seatCols.toIntArray()
+                    )
+                    putExtra(
+                        com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity.EXTRA_TICKET_PRICE,
+                        ticketPrice
+                    )
+                    putExtra(
+                        com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity.EXTRA_MOVIE_TITLE,
+                        movieTitle
+                    )
+                    putExtra(
+                        com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity.EXTRA_CINEMA_HALL,
+                        "$cinemaName · $hallName"
+                    )
+                    putExtra(
+                        com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity.EXTRA_SHOW_TIME,
+                        startTime
+                    )
                 }
             )
         }

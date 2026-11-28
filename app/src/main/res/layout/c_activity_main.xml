@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    tools:context=".MainActivity">
+
+    <!-- 临时联调入口：登录页与首页由成员 B 负责，接入前先用两个按钮进 C 的页面 -->
+    <Button
+        android:id="@+id/btnConfirmOrder"
+        android:layout_width="220dp"
+        android:layout_height="48dp"
+        android:text="确认订单（联调）"
+        android:textSize="15sp"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#FF4D4F" />
+
+    <Button
+        android:id="@+id/btnMyOrders"
+        android:layout_width="220dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:text="我的订单"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/btnProfile"
+        android:layout_width="220dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:text="个人中心"
+        android:textSize="15sp" />
+</LinearLayout>

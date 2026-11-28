@@ -1,16 +1,17 @@
 package cn.edu.sicnu.cs.stu.zhuoyilin.sixth
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.common.auth.AuthManager
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.ui.movie.MovieListFragment
+import com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderListActivity
+import com.edu.sicnu.cs.stu.niuwenya.studentc.user.ProfileActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class MainActivity : AppCompatActivity() {
     private val homeFragment = MovieListFragment()
-    private val gameFragment = GameFragment.newInstance()
-    private val helloFragment = HelloFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,15 +31,13 @@ class MainActivity : AppCompatActivity() {
                         .replace(R.id.frameLayout, homeFragment).commit()
                     true
                 }
-                R.id.game -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.frameLayout, gameFragment).commit()
-                    true
+                R.id.orders -> {
+                    startActivity(Intent(this, OrderListActivity::class.java))
+                    false
                 }
-                R.id.hello -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.frameLayout, helloFragment).commit()
-                    true
+                R.id.profile -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    false
                 }
                 R.id.logout -> {
                     showLogoutDialog()
