@@ -98,6 +98,8 @@ class SeatSelectViewModel : BaseViewModel() {
                     scheduleId = scheduleId,
                     seatIds = orderSeats.map { it.seatId }.filter { it > 0 },
                     seatLabels = orderSeats.map { it.label },
+                    seatRows = orderSeats.map { it.row },
+                    seatCols = orderSeats.map { it.col },
                     totalPrice = latest.totalPrice
                 )
             } catch (e: ApiException) {
@@ -203,5 +205,7 @@ data class SeatOrderPayload(
     val scheduleId: Int,
     val seatIds: List<Int>,
     val seatLabels: List<String>,
+    val seatRows: List<Int>,
+    val seatCols: List<Int>,
     val totalPrice: Double
 )
