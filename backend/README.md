@@ -776,11 +776,37 @@ A: 订单金额由服务端重算，客户端传入的 `totalAmount` 仅用于�
 
 当前演示数据包含：
 
-- **热映影片**（6 部）：寻梦环游记、哪吒之魔童降世、唐探1900、猪猪侠大电影·星际行动、心灵奇旅、姜子牙
-- **待映影片**（1 部）：沙丘3
+- **影片**：热映 + 待映，具体片目由 `data/movies.json` 决定（未提供时使用内置演示数据）
 - **影院**（3 家）：星汇影城（春熙路店）、锦江国际影城、天府艺术影城
 - **影厅**：每家 2 个厅，均为 10 排 × 14 列
-- **场次**：未来 7 天，每厅每天 4 场
+- **场次**：未来 7 天，每厅每天 4 场，**所有影片均参与排片**（待映片从第 4 天开始排）
 - **卖品**：每家影院 5 种（单人套餐、双人套餐、大桶爆米花、可乐大杯、香草冰淇淋）
 
-所有影片信息来自猫眼公开数据，海报存储在本地 `static/posters/` 目录，断网环境也可正常显示。
+### 影片数据来源
+
+海报复用本地文件，全部存储在 `static/posters/`，断网环境也能正常显示。
+
+**方式一：内置演示数据（默认）**
+直接运行 `python seed.py`，使用脚本内置的影片清单。
+
+**方式二：从 TMDB 同步真实数据**
+
+```powershell
+# 1. 注册免费 API Key：https://www.themoviedb.org/settings/api
+# 2. 设置凭证（本次终端有效）
+$env:TMDB_API_KEY="你的 v3 key"
+# 或使用 v4 读访问令牌
+$env:TMDB_READ_TOKEN="你的 v4 令牌"
+
+# 3. 拉取数据 + 下载海报（只在开发时联网一次）
+python fetch_tmdb.py
+
+# 4. 注入数据库
+python seed.py
+```
+
+同步结果写入 `data/movies.json`，海报下载为 `static/posters/tmdb_{id}.jpg`。后端运行时**不依赖** TMDB，断网演示不受影响。
+
+> 数据来源：TMDB（The Movie Database）。此产品使用 TMDB API，但未获得 TMDB 认可或认证。
+> This product uses the TMDB API but is not endorsed or certified by TMDB.
+

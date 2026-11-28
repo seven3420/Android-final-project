@@ -3,14 +3,40 @@
 
 运行：python seed.py
 作用：清空所有表（并重置自增 id，保证每次重跑后演示 id 固定）后重新注入：
-      1 个演示账号、4 部影片、3 家影院 / 6 个影厅、未来 7 天场次、每家 5 种卖品
+      1 个演示账号、影片、3 家影院 / 6 个影厅、未来 7 天场次、每家 5 种卖品
+
+影片数据来源：
+      读取 data/movies.json（由 fetch_tmdb.py 从 TMDB 同步生成，已随仓库提交）；
+      文件缺失时执行 fetch_tmdb.py 重新生成。
 
 演示账号：13800000001 / 123456
 注意：重跑会清掉已有订单，演示前想恢复初始状态就执行一次。
 """
+import json
 import sqlite3
+import sys
 from datetime import datetime, timedelta
+from pathlib import Path
 from database import DB_PATH, init_db
+
+DATA_FILE = Path(__file__).resolve().parent / "data" / "movies.json"
+
+
+def load_movies():
+    """从 data/movies.json 读取影片数据"""
+    if not DATA_FILE.exists():
+        print(f"❌ 未找到影片数据文件：{DATA_FILE}")
+        print("   请先运行：python fetch_tmdb.py 生成（需要设置 TMDB_API_KEY）")
+        sys.exit(1)
+
+    raw = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+    movies = [
+        (m["title"], m["poster"], m["score"], m["duration"], m["type"],
+         m["director"], m["actors"], m["description"], m["status"], m["release_date"])
+        for m in raw
+    ]
+    print(f"✅ 已从 data/movies.json 读取 {len(movies)} 部影片")
+    return movies
 
 
 def seed():
@@ -32,32 +58,8 @@ def seed():
         ("13800000001", "123456", "小明", now),
     )
 
-    # ===== 2. 影片（片名/主演/上映日期取自猫眼实时榜单，评分与时长为演示值）=====
-    movies = [
-        # ===== 热映 now（6 部） =====
-        ("猪猪侠大电影·星际行动", "static/posters/ggbond.jpg", 9.0, 85, "动画/冒险/喜剧",
-         "李腾栋", "陆双,徐经纬,刘青扬",
-         "猪猪星被宇宙入侵者占领，超星五灵侠逃亡地球寻找音符圣杯，重新领悟团结合作。", "now", "2024-05-01"),
-        ("唐探1900", "static/posters/detective1900.jpg", 9.2, 136, "喜剧/动作/悬疑",
-         "陈思诚,戴墨", "王宝强,刘昊然,周润发",
-         "1900 年旧金山唐人街，阿鬼与秦福因一场凶杀案结缘，开启笑闹探案之旅。", "now", "2025-01-29"),
-        ("寻梦环游记", "static/posters/coco.jpg", 9.6, 105, "动画/家庭/冒险",
-         "李·昂克里奇", "安东尼·冈萨雷斯,本杰明·布拉特,盖尔·加西亚·贝纳尔",
-         "鞋匠家庭出身的米格在亡灵节误入亡灵世界，在追寻音乐梦的路上找回家族记忆。", "now", "2017-11-24"),
-        ("哪吒之魔童降世", "static/posters/nezha.jpg", 9.6, 110, "动画/奇幻",
-         "饺子", "吕艳婷,囧森瑟夫,瀚墨",
-         "灵珠与魔丸被掉包，本应是英雄的哪吒成了混世魔王，“我命由我不由天”。", "now", "2019-07-26"),
-        ("心灵奇旅", "static/posters/soul.jpg", 9.2, 101, "动画/喜剧/冒险",
-         "彼特·道格特", "杰米·福克斯,蒂娜·菲,菲利西亚·拉斯海德",
-         "中学音乐教师乔伊意外闯入“生之来处”，与厌世灵魂 22 共同寻找生命的火花。", "now", "2020-12-25"),
-        ("姜子牙", "static/posters/jiangziya.jpg", 8.3, 110, "动画/动作/冒险",
-         "程腾,李炜", "郑希,杨凝,图特哈蒙",
-         "封神之后，姜子牙为救小九踏上对抗天道的旅程，拉开封神宇宙的序幕。", "now", "2020-10-01"),
-        # ===== 待映 soon（1 部） =====
-        ("沙丘3", "static/posters/dune.jpg", 9.6, 165, "科幻/冒险",
-         "丹尼斯·维伦纽瓦", "提莫西·查拉梅,赞达亚·科尔曼,杰森·莫玛",
-         "“沙丘”三部曲终章，保罗·厄崔迪与厄拉科斯的命运走向终局。", "soon", "2026-12-31"),
-    ]
+    # ===== 2. 影片（来自 data/movies.json 或内置演示数据）=====
+    movies = load_movies()
     cur.executemany(
         """INSERT INTO movie (title, poster, score, duration, type, director,
            actors, description, status, release_date)
@@ -89,26 +91,31 @@ def seed():
     price_map = {"now": 42.0, "soon": 38.0}
 
     # 3 家影院 × 2 个厅 = 6 个 hall
-    # 热映片轮流排，待映片只排部分
-    movie_ids_now = [1, 2, 3]
-    movie_ids_soon = [4]
+    # 按影厅轮转排片，保证每部影片每天都能排到场次
+    cur.execute("SELECT id, status FROM movie ORDER BY id")
+    rows = cur.fetchall()
+    movie_ids_now = [r[0] for r in rows if r[1] == "now"]
+    movie_ids_soon = [r[0] for r in rows if r[1] == "soon"]
+    status_of = {r[0]: r[1] for r in rows}
 
     today = datetime.now()
     for day_offset in range(7):
         day = today + timedelta(days=day_offset)
         date_str = day.strftime("%Y-%m-%d")
+        # 待映片从第 4 天起参与排片
+        pool = (movie_ids_now + movie_ids_soon) if day_offset >= 3 else list(movie_ids_now)
+        if not pool:
+            continue
         for hid in range(1, 7):                      # 6 个影厅
             cinema_id = (hid - 1) // 2 + 1
-            # 热映片每天排完，待映片从 D4 开始排
-            if day_offset < 3:
-                movies_for_hall = movie_ids_now
-            else:
-                movies_for_hall = movie_ids_now + movie_ids_soon
+            # 按「影厅号 + 天数×2」轮转，保证每家影院每天都能轮到不同影片
+            start = (hid - 1) + day_offset * 2
+            picks = [pool[(start + k) % len(pool)] for k in range(min(2, len(pool)))]
             # 每个影厅每天排 2 部影片 × 2 场
-            for j, mid in enumerate(movies_for_hall[:2]):
+            for j, mid in enumerate(picks):
                 for slot in range(2):               # 每部排 2 个时段
                     tm = showtimes[(j * 2 + slot + hid) % 4]
-                    price = price_map["now"] if mid in movie_ids_now else price_map["soon"]
+                    price = price_map[status_of[mid]]
                     schedules.append((mid, cinema_id, hid,
                                       f"{date_str} {tm}:00", price, "国语 2D"))
     cur.executemany(
@@ -135,9 +142,10 @@ def seed():
 
     conn.commit()
     conn.close()
-    print("✅ 演示数据已注入：1 用户 / 4 影片 / 3 影院 / 6 影厅 / 场次 / 卖品")
+    print(f"✅ 演示数据已注入：1 用户 / {len(movies)} 影片 / 3 影院 / 6 影厅 / {len(schedules)} 场次 / 卖品")
     print("   账号：13800000001  密码：123456")
 
 
 if __name__ == "__main__":
+    seed()
     seed()
