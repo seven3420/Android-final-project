@@ -15,7 +15,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderListActivity
-import com.edu.sicnu.cs.stu.niuwenya.studentc.order.StatisticsActivity
+import com.edu.sicnu.cs.stu.niuwenya.studentc.user.LoginActivity
+import com.edu.sicnu.cs.stu.niuwenya.studentc.user.ProfileActivity
+import com.edu.sicnu.cs.stu.niuwenya.studentc.user.UserSession
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,6 +38,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 未登录先走登录页，登录成功再由 LoginActivity 清栈回到这里
+        if (!UserSession.isLoggedIn(this)) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -46,15 +56,15 @@ class MainActivity : AppCompatActivity() {
 
         ensureLocalNetworkPermission()
 
-        // 登录页与首页由成员 B 负责，接入前先用这两个临时入口进交易链路联调
+        // 首页由成员 B 负责，接入前先用这些临时入口进 C 的页面联调
         findViewById<Button>(R.id.btnConfirmOrder).setOnClickListener {
             startActivity(Intent(this, OrderConfirmActivity::class.java))
         }
         findViewById<Button>(R.id.btnMyOrders).setOnClickListener {
             startActivity(Intent(this, OrderListActivity::class.java))
         }
-        findViewById<Button>(R.id.btnStatistics).setOnClickListener {
-            startActivity(Intent(this, StatisticsActivity::class.java))
+        findViewById<Button>(R.id.btnProfile).setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 

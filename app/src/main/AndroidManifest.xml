@@ -50,7 +50,12 @@
             android:exported="false" />
 
         <activity
-            android:name=".order.StatisticsActivity"
+            android:name=".user.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".user.ProfileActivity"
             android:exported="false" />
 
         <!-- 开场前 30 分钟的提醒闹钟落点，只在本应用内触发，不对外导出 -->
