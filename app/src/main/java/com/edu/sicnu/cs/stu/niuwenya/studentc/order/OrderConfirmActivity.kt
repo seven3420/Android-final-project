@@ -71,6 +71,7 @@ class OrderConfirmActivity : AppCompatActivity() {
             startActivity(Intent(this, OrderListActivity::class.java))
         }
         binding.tvBack.setOnClickListener { finish() }
+        binding.btnHome.setOnClickListener { goHome() }
         binding.tvAddGoods.setOnClickListener { openGoodsDialog() }
         binding.btnSubmitOrder.setOnClickListener { submitOrder() }
 

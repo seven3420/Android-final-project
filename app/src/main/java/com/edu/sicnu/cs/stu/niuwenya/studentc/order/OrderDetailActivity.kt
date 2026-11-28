@@ -1,6 +1,7 @@
 package com.edu.sicnu.cs.stu.niuwenya.studentc.order
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Paint
 import android.os.Build
@@ -69,8 +70,16 @@ class OrderDetailActivity : AppCompatActivity() {
 
         orderId = intent.getIntExtra(EXTRA_ORDER_ID, 0)
         binding.tvBack.setOnClickListener { finish() }
+        binding.btnHome.setOnClickListener { goHome() }
         binding.btnPay.setOnClickListener { detail?.let { showPay(it) } }
         binding.btnCancel.setOnClickListener { confirmCancel() }
+        binding.btnViewOrders.setOnClickListener {
+            startActivity(
+                Intent(this, OrderListActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                }
+            )
+        }
 
         loadDetail()
     }

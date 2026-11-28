@@ -32,6 +32,15 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary" />
+
+        <TextView
+            android:id="@+id/btnHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="首页"
+            android:textSize="13sp"
+            android:textColor="@color/primary"
+            android:padding="6dp" />
     </LinearLayout>
 
     <FrameLayout
@@ -401,6 +410,15 @@
                         android:textColor="@color/text_secondary"
                         android:backgroundTint="@color/divider" />
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnViewOrders"
+                    style="@style/Widget.Sixth.Button.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="12dp"
+                    android:text="查看全部订单"
+                    android:textSize="15sp" />
 
             </LinearLayout>
         </ScrollView>

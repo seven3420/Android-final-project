@@ -55,6 +55,7 @@ class OrderListActivity : AppCompatActivity() {
         binding.rvOrders.layoutManager = LinearLayoutManager(this)
         binding.rvOrders.adapter = adapter
         binding.tvBack.setOnClickListener { finish() }
+        binding.btnHome.setOnClickListener { goHome() }
 
         setupTabs()
     }

@@ -32,6 +32,15 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary" />
+
+        <TextView
+            android:id="@+id/btnHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="首页"
+            android:textSize="13sp"
+            android:textColor="@color/primary"
+            android:padding="6dp" />
     </LinearLayout>
 
     <ScrollView

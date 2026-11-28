@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.databinding.ActivityProfileBinding
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderListActivity
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.api.RetrofitClient
+import com.edu.sicnu.cs.stu.niuwenya.studentc.order.goHome
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -27,6 +28,7 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.tvBack.setOnClickListener { finish() }
+        binding.btnHome.setOnClickListener { goHome() }
         binding.rowOrders.setOnClickListener {
             startActivity(Intent(this, OrderListActivity::class.java))
         }
