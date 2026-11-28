@@ -1,7 +1,9 @@
 """冒烟测试：下单 → 支付 → 观影统计"""
 import urllib.request, json
+from datetime import datetime
 
 BASE = "http://127.0.0.1:9000"
+TODAY = datetime.now().strftime("%Y-%m-%d")
 
 def post(path, data, token=None):
     body = json.dumps(data).encode()
@@ -24,7 +26,7 @@ print(f"✅ token = {token[:20]}...")
 
 # 2. 场次
 print("\n=== 2. 场次 ===")
-s = get("/api/getScheduleList?movieId=1&cinemaId=1&date=2026-11-23")
+s = get(f"/api/getScheduleList?movieId=1&cinemaId=1&date={TODAY}")
 sch = s["data"][0]
 print(f"✅ scheduleId={sch['id']} price={sch['price']} hall={sch['hallName']}")
 
@@ -50,7 +52,7 @@ print(f"✅ 取票码={p['data']['ticketCode']}")
 
 # 5. 再来一单（不同电影，凑点数据）
 print("\n=== 5. 再来一单（电影2）===")
-s2 = get("/api/getScheduleList?movieId=2&cinemaId=1&date=2026-11-23")
+s2 = get(f"/api/getScheduleList?movieId=2&cinemaId=1&date={TODAY}")
 sch2 = s2["data"][0]
 o2 = post("/api/createOrder", {
     "scheduleId": sch2["id"],
