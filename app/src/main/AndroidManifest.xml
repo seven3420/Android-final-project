@@ -6,6 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Android 16+ 访问局域网后端（电脑上的 http 服务）需要该权限 -->
     <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+    <!-- C 的订单模块：开场提醒通知与精确闹钟 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:name=".App"
@@ -42,6 +45,32 @@
 
         <activity
             android:name=".ui.order.OrderConfirmActivity"
+            android:exported="false" />
+
+        <!-- 以下为 C 的订单、支付、个人中心模块，保留其原有包路径 -->
+        <activity
+            android:name="com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="com.edu.sicnu.cs.stu.niuwenya.studentc.user.ProfileActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="com.edu.sicnu.cs.stu.niuwenya.studentc.user.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <receiver
+            android:name="com.edu.sicnu.cs.stu.niuwenya.studentc.order.reminder.ShowReminderReceiver"
             android:exported="false" />
 
         <activity

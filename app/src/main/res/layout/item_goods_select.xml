@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:background="@color/surface">
+
+    <!-- 卖品图片 -->
+    <ImageView
+        android:id="@+id/ivGoods"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@android:drawable/ic_menu_gallery"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 名称 -->
+    <TextView
+        android:id="@+id/tvGoodsName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="卖品名称"
+        android:textSize="15sp"
+        android:textColor="@color/text_primary"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintEnd_toStartOf="@id/tvMinus"
+        app:layout_constraintStart_toEndOf="@id/ivGoods"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 现价 -->
+    <TextView
+        android:id="@+id/tvGoodsPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="4dp"
+        android:text="¥0.00"
+        android:textSize="14sp"
+        android:textColor="@color/primary"
+        app:layout_constraintStart_toEndOf="@id/ivGoods"
+        app:layout_constraintTop_toBottomOf="@id/tvGoodsName" />
+
+    <!-- 原价（划线） -->
+    <TextView
+        android:id="@+id/tvGoodsOrigin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:text="¥0.00"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tvGoodsPrice"
+        app:layout_constraintStart_toEndOf="@id/tvGoodsPrice" />
+
+    <!-- 立省 + 库存 -->
+    <TextView
+        android:id="@+id/tvGoodsSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:text="立省 0.00 元"
+        android:textSize="12sp"
+        android:textColor="@color/accent_clay"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tvGoodsPrice"
+        app:layout_constraintStart_toEndOf="@id/tvGoodsOrigin" />
+
+    <TextView
+        android:id="@+id/tvGoodsStock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="2dp"
+        android:text="库存 0"
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintStart_toEndOf="@id/ivGoods"
+        app:layout_constraintTop_toBottomOf="@id/tvGoodsPrice" />
+
+    <!-- 数量步进器 -->
+    <TextView
+        android:id="@+id/tvMinus"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:text="-"
+        android:textSize="16sp"
+        android:textColor="@color/text_primary"
+        android:gravity="center"
+        android:background="@color/surface_variant"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvQty" />
+
+    <TextView
+        android:id="@+id/tvQty"
+        android:layout_width="32dp"
+        android:layout_height="26dp"
+        android:text="0"
+        android:textSize="14sp"
+        android:textColor="@color/text_primary"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvPlus" />
+
+    <TextView
+        android:id="@+id/tvPlus"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:text="+"
+        android:textSize="16sp"
+        android:textColor="@color/text_primary"
+        android:gravity="center"
+        android:background="@color/surface_variant"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
