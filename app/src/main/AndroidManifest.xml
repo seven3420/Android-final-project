@@ -6,6 +6,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!-- 开场提醒：Android 13 起发本地通知需要运行时权限；精确闹钟在 Android 12 起需声明 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!--
+        Android 17（API 37）起强制执行本地网络保护：targetSdk>=37 的应用访问局域网
+        （模拟器宿主机 10.0.2.2、真机联调时的电脑局域网 IP）必须声明并运行时申请该权限，
+        否则连接会被系统静默丢包，表现为 OkHttp 15 秒超时后提示"网络异常"。
+    -->
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
@@ -36,6 +47,15 @@
 
         <activity
             android:name=".order.OrderDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".order.StatisticsActivity"
+            android:exported="false" />
+
+        <!-- 开场前 30 分钟的提醒闹钟落点，只在本应用内触发，不对外导出 -->
+        <receiver
+            android:name=".order.reminder.ShowReminderReceiver"
             android:exported="false" />
     </application>
 
