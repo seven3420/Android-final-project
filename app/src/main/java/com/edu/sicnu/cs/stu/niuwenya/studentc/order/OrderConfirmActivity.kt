@@ -33,6 +33,7 @@ class OrderConfirmActivity : AppCompatActivity() {
         const val EXTRA_MOVIE_TITLE = "extra_movie_title"
         const val EXTRA_CINEMA_HALL = "extra_cinema_hall"
         const val EXTRA_SHOW_TIME = "extra_show_time"
+        const val EXTRA_CINEMA_ID = "extra_cinema_id"
 
         private const val DEFAULT_CINEMA_ID = 1
         private const val DEFAULT_SCHEDULE_ID = 1
@@ -69,6 +70,7 @@ class OrderConfirmActivity : AppCompatActivity() {
         binding.tvMyOrders.setOnClickListener {
             startActivity(Intent(this, OrderListActivity::class.java))
         }
+        binding.tvBack.setOnClickListener { finish() }
         binding.tvAddGoods.setOnClickListener { openGoodsDialog() }
         binding.btnSubmitOrder.setOnClickListener { submitOrder() }
 
@@ -82,6 +84,7 @@ class OrderConfirmActivity : AppCompatActivity() {
 
     private fun readIntent() {
         scheduleId = intent.getIntExtra(EXTRA_SCHEDULE_ID, DEFAULT_SCHEDULE_ID)
+        cinemaId = intent.getIntExtra(EXTRA_CINEMA_ID, 0).takeIf { it > 0 } ?: DEFAULT_CINEMA_ID
         ticketPrice = intent.getDoubleExtra(EXTRA_TICKET_PRICE, DEFAULT_TICKET_PRICE)
         intent.getStringExtra(EXTRA_MOVIE_TITLE)?.takeIf { it.isNotBlank() }?.let { movieTitle = it }
         intent.getStringExtra(EXTRA_CINEMA_HALL)?.takeIf { it.isNotBlank() }?.let { cinemaHall = it }

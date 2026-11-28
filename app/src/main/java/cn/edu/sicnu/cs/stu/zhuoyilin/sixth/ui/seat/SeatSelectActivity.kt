@@ -18,6 +18,7 @@ class SeatSelectActivity : BaseActivity() {
         const val EXTRA_SCHEDULE_ID = "extra_schedule_id"
         const val EXTRA_MOVIE_TITLE = "extra_movie_title"
         const val EXTRA_CINEMA_NAME = "extra_cinema_name"
+        const val EXTRA_CINEMA_ID = "extra_cinema_id"
         const val EXTRA_HALL_NAME = "extra_hall_name"
         const val EXTRA_START_TIME = "extra_start_time"
         const val EXTRA_TICKET_PRICE = "extra_ticket_price"
@@ -28,6 +29,7 @@ class SeatSelectActivity : BaseActivity() {
 
     private var movieTitle: String = ""
     private var cinemaName: String = ""
+    private var cinemaId: Int = 0
     private var hallName: String = ""
     private var startTime: String = ""
     private var ticketPrice: Double = 0.0
@@ -42,6 +44,7 @@ class SeatSelectActivity : BaseActivity() {
         val scheduleId = intent.getIntExtra(EXTRA_SCHEDULE_ID, 0)
         movieTitle = intent.getStringExtra(EXTRA_MOVIE_TITLE).orEmpty()
         cinemaName = intent.getStringExtra(EXTRA_CINEMA_NAME).orEmpty()
+        cinemaId = intent.getIntExtra(EXTRA_CINEMA_ID, 0)
         hallName = intent.getStringExtra(EXTRA_HALL_NAME).orEmpty()
         startTime = intent.getStringExtra(EXTRA_START_TIME).orEmpty()
         ticketPrice = intent.getDoubleExtra(EXTRA_TICKET_PRICE, 0.0)
@@ -151,6 +154,10 @@ class SeatSelectActivity : BaseActivity() {
                     putExtra(
                         com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity.EXTRA_SHOW_TIME,
                         startTime
+                    )
+                    putExtra(
+                        com.edu.sicnu.cs.stu.niuwenya.studentc.order.OrderConfirmActivity.EXTRA_CINEMA_ID,
+                        cinemaId
                     )
                 }
             )

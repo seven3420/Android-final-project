@@ -104,7 +104,7 @@ object QrCodeUtil {
         canvas.drawRect(0f, 0f, size.toFloat(), size.toFloat(), paint)
 
         val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.parseColor("#FF4D4F")
+            color = Color.parseColor("#945F50")
             textSize = size / 6.5f
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             textAlign = Paint.Align.CENTER

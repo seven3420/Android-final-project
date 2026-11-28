@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@android:color/white"
+    android:background="@drawable/bg_surface_card"
     android:padding="12dp"
     android:layout_margin="8dp">
 
@@ -17,7 +17,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:scaleType="centerCrop"
-            android:background="#EEEEEE"
+            android:background="@color/divider"
             android:src="@android:drawable/ic_menu_gallery"
             android:contentDescription="影片海报" />
 
@@ -42,7 +42,7 @@
                     android:text="影片名称"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:textColor="#222222"
+                    android:textColor="@color/text_primary"
                     android:maxLines="1"
                     android:ellipsize="end" />
 
@@ -53,7 +53,7 @@
                     android:layout_marginStart="8dp"
                     android:text="待支付"
                     android:textSize="12sp"
-                    android:textColor="#FF4D4F" />
+                    android:textColor="@color/primary" />
             </LinearLayout>
 
             <TextView
@@ -63,7 +63,7 @@
                 android:layout_marginTop="4dp"
                 android:text="影院 · 影厅"
                 android:textSize="12sp"
-                android:textColor="#999999" />
+                android:textColor="@color/text_secondary" />
 
             <TextView
                 android:id="@+id/tvShowTime"
@@ -72,7 +72,7 @@
                 android:layout_marginTop="2dp"
                 android:text="开场时间"
                 android:textSize="12sp"
-                android:textColor="#999999" />
+                android:textColor="@color/text_secondary" />
 
             <TextView
                 android:id="@+id/tvSeats"
@@ -81,7 +81,7 @@
                 android:layout_marginTop="2dp"
                 android:text="共 0 张"
                 android:textSize="12sp"
-                android:textColor="#999999" />
+                android:textColor="@color/text_secondary" />
         </LinearLayout>
     </LinearLayout>
 
@@ -100,7 +100,7 @@
             android:text="合计 ¥0.00"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="#FF4D4F" />
+            android:textColor="@color/primary" />
 
         <TextView
             android:id="@+id/tvCountdown"
@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:text="剩余 00:00"
             android:textSize="12sp"
-            android:textColor="#999999"
+            android:textColor="@color/text_secondary"
             android:visibility="gone" />
     </LinearLayout>
 
@@ -127,8 +127,8 @@
             android:layout_height="32dp"
             android:text="取消订单"
             android:textSize="12sp"
-            android:textColor="#666666"
-            android:backgroundTint="#F2F2F2"
+            android:textColor="@color/text_secondary"
+            android:backgroundTint="@color/surface_variant"
             android:minWidth="0dp"
             android:paddingStart="12dp"
             android:paddingEnd="12dp" />
@@ -141,7 +141,7 @@
             android:text="去支付"
             android:textSize="12sp"
             android:textColor="@android:color/white"
-            android:backgroundTint="#FF4D4F"
+            android:backgroundTint="@color/primary"
             android:minWidth="0dp"
             android:paddingStart="12dp"
             android:paddingEnd="12dp" />

@@ -4,8 +4,10 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.databinding.ItemGoodsSelectBinding
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.CartItem
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.formatMoney
@@ -43,6 +45,13 @@ class GoodsSelectAdapter : RecyclerView.Adapter<GoodsSelectAdapter.Holder>() {
 
         binding.tvGoodsName.text = item.name
         binding.tvGoodsPrice.text = "¥${formatMoney(item.price)}"
+        if (item.image.isNotBlank()) {
+            Glide.with(binding.ivGoods)
+                .load(item.image)
+                .placeholder(android.R.drawable.ic_menu_gallery)
+                .error(android.R.drawable.ic_menu_gallery)
+                .into(binding.ivGoods)
+        }
 
         // 原价与立省只做展示，不参与结算
         binding.tvGoodsOrigin.isVisible = item.hasDiscount
@@ -52,11 +61,17 @@ class GoodsSelectAdapter : RecyclerView.Adapter<GoodsSelectAdapter.Holder>() {
         }
         binding.tvGoodsSave.isVisible = item.hasDiscount
         if (item.hasDiscount) {
-            binding.tvGoodsSave.text = "立省 ${formatMoney(item.saveAmount)} 元"
+            binding.tvGoodsSave.text = "立省 ${formatMoney(item.originPrice - item.price)} 元"
         }
 
         binding.tvGoodsStock.text = if (item.stock <= 0) "已售完" else "库存 ${item.stock}"
-        binding.tvGoodsStock.setTextColor(if (item.stock <= 0) 0xFFFF4D4F.toInt() else 0xFF999999.toInt())
+        binding.tvGoodsStock.setTextColor(
+            if (item.stock <= 0) {
+                ContextCompat.getColor(binding.root.context, cn.edu.sicnu.cs.stu.zhuoyilin.sixth.R.color.error)
+            } else {
+                ContextCompat.getColor(binding.root.context, cn.edu.sicnu.cs.stu.zhuoyilin.sixth.R.color.text_secondary)
+            }
+        )
 
         binding.tvQty.text = item.quantity.toString()
         setStepperEnabled(binding.tvMinus, item.canDecrease)

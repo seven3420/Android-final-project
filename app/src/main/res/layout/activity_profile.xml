@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="@color/window_background">
 
     <!-- 顶部栏 -->
     <LinearLayout
@@ -12,7 +12,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="12dp"
-        android:background="@android:color/white">
+        android:background="@color/surface">
 
         <TextView
             android:id="@+id/tvBack"
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="‹"
             android:textSize="26sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_primary"
             android:paddingStart="4dp"
             android:paddingEnd="12dp" />
 
@@ -31,7 +31,7 @@
             android:text="个人中心"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#222222" />
+            android:textColor="@color/text_primary" />
     </LinearLayout>
 
     <ScrollView
@@ -53,7 +53,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:padding="20dp"
-                android:background="@android:color/white">
+                android:background="@drawable/bg_surface_card">
 
                 <TextView
                     android:id="@+id/tvAvatar"
@@ -80,7 +80,7 @@
                         android:text="影迷"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#222222" />
+                        android:textColor="@color/text_primary" />
 
                     <TextView
                         android:id="@+id/tvPhone"
@@ -89,7 +89,7 @@
                         android:layout_marginTop="4dp"
                         android:text=""
                         android:textSize="13sp"
-                        android:textColor="#999999" />
+                        android:textColor="@color/text_secondary" />
                 </LinearLayout>
 
                 <TextView
@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:text="普通会员"
                     android:textSize="11sp"
-                    android:textColor="#FF4D4F" />
+                    android:textColor="@color/primary" />
             </LinearLayout>
 
             <!-- 观影概览 -->
@@ -107,7 +107,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="12dp"
                 android:padding="16dp"
-                android:background="@android:color/white">
+                android:background="@drawable/bg_surface_card">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -123,7 +123,7 @@
                         android:text="--"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="#FF4D4F" />
+                        android:textColor="@color/primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -131,7 +131,7 @@
                         android:layout_marginTop="4dp"
                         android:text="观影场次"
                         android:textSize="12sp"
-                        android:textColor="#666666" />
+                        android:textColor="@color/text_secondary" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -148,7 +148,7 @@
                         android:text="--"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="#FF4D4F" />
+                        android:textColor="@color/primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -156,7 +156,7 @@
                         android:layout_marginTop="4dp"
                         android:text="购票张数"
                         android:textSize="12sp"
-                        android:textColor="#666666" />
+                        android:textColor="@color/text_secondary" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -173,7 +173,7 @@
                         android:text="--"
                         android:textSize="20sp"
                         android:textStyle="bold"
-                        android:textColor="#FF4D4F" />
+                        android:textColor="@color/primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -181,7 +181,7 @@
                         android:layout_marginTop="4dp"
                         android:text="累计消费"
                         android:textSize="12sp"
-                        android:textColor="#666666" />
+                        android:textColor="@color/text_secondary" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -191,7 +191,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginTop="12dp"
-                android:background="@android:color/white">
+                android:background="@drawable/bg_surface_card">
 
                 <LinearLayout
                     android:id="@+id/rowOrders"
@@ -208,21 +208,21 @@
                         android:layout_weight="1"
                         android:text="我的订单"
                         android:textSize="14sp"
-                        android:textColor="#333333" />
+                        android:textColor="@color/text_primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="›"
                         android:textSize="18sp"
-                        android:textColor="#CCCCCC" />
+                        android:textColor="@color/outline" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="16dp"
-                    android:background="#EEEEEE" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/rowSettings"
@@ -239,21 +239,21 @@
                         android:layout_weight="1"
                         android:text="设置"
                         android:textSize="14sp"
-                        android:textColor="#333333" />
+                        android:textColor="@color/text_primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="›"
                         android:textSize="18sp"
-                        android:textColor="#CCCCCC" />
+                        android:textColor="@color/outline" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="16dp"
-                    android:background="#EEEEEE" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/rowHelp"
@@ -270,21 +270,21 @@
                         android:layout_weight="1"
                         android:text="帮助与反馈"
                         android:textSize="14sp"
-                        android:textColor="#333333" />
+                        android:textColor="@color/text_primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="›"
                         android:textSize="18sp"
-                        android:textColor="#CCCCCC" />
+                        android:textColor="@color/outline" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:layout_marginStart="16dp"
-                    android:background="#EEEEEE" />
+                    android:background="@color/divider" />
 
                 <LinearLayout
                     android:id="@+id/rowAbout"
@@ -301,26 +301,25 @@
                         android:layout_weight="1"
                         android:text="关于我们"
                         android:textSize="14sp"
-                        android:textColor="#333333" />
+                        android:textColor="@color/text_primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="›"
                         android:textSize="18sp"
-                        android:textColor="#CCCCCC" />
+                        android:textColor="@color/outline" />
                 </LinearLayout>
             </LinearLayout>
 
             <Button
                 android:id="@+id/btnLogout"
+                style="@style/Widget.Sixth.Button.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
                 android:layout_marginTop="24dp"
                 android:text="退出登录"
-                android:textSize="15sp"
-                android:textColor="#FF4D4F"
-                android:backgroundTint="@android:color/white" />
+                android:textSize="15sp" />
 
         </LinearLayout>
     </ScrollView>

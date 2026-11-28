@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="12dp"
-    android:background="@android:color/white">
+    android:background="@color/surface">
 
     <!-- 卖品图片 -->
     <ImageView
@@ -23,7 +23,7 @@
         android:layout_marginStart="12dp"
         android:text="卖品名称"
         android:textSize="15sp"
-        android:textColor="#333333"
+        android:textColor="@color/text_primary"
         android:maxLines="1"
         android:ellipsize="end"
         app:layout_constraintEnd_toStartOf="@id/tvMinus"
@@ -39,7 +39,7 @@
         android:layout_marginTop="4dp"
         android:text="¥0.00"
         android:textSize="14sp"
-        android:textColor="#FF4D4F"
+        android:textColor="@color/primary"
         app:layout_constraintStart_toEndOf="@id/ivGoods"
         app:layout_constraintTop_toBottomOf="@id/tvGoodsName" />
 
@@ -51,7 +51,7 @@
         android:layout_marginStart="6dp"
         android:text="¥0.00"
         android:textSize="12sp"
-        android:textColor="#999999"
+        android:textColor="@color/text_secondary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/tvGoodsPrice"
         app:layout_constraintStart_toEndOf="@id/tvGoodsPrice" />
@@ -64,7 +64,7 @@
         android:layout_marginStart="6dp"
         android:text="立省 0.00 元"
         android:textSize="12sp"
-        android:textColor="#FF8C1A"
+        android:textColor="@color/accent_clay"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/tvGoodsPrice"
         app:layout_constraintStart_toEndOf="@id/tvGoodsOrigin" />
@@ -77,7 +77,7 @@
         android:layout_marginTop="2dp"
         android:text="库存 0"
         android:textSize="12sp"
-        android:textColor="#999999"
+        android:textColor="@color/text_secondary"
         app:layout_constraintStart_toEndOf="@id/ivGoods"
         app:layout_constraintTop_toBottomOf="@id/tvGoodsPrice" />
 
@@ -88,9 +88,9 @@
         android:layout_height="26dp"
         android:text="-"
         android:textSize="16sp"
-        android:textColor="#333333"
+        android:textColor="@color/text_primary"
         android:gravity="center"
-        android:background="#F2F2F2"
+        android:background="@color/surface_variant"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tvQty" />
 
@@ -100,7 +100,7 @@
         android:layout_height="26dp"
         android:text="0"
         android:textSize="14sp"
-        android:textColor="#333333"
+        android:textColor="@color/text_primary"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tvPlus" />
@@ -111,9 +111,9 @@
         android:layout_height="26dp"
         android:text="+"
         android:textSize="16sp"
-        android:textColor="#333333"
+        android:textColor="@color/text_primary"
         android:gravity="center"
-        android:background="#F2F2F2"
+        android:background="@color/surface_variant"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

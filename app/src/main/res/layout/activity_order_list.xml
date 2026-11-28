@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="@color/window_background">
 
     <!-- 顶部栏 -->
     <LinearLayout
@@ -13,7 +13,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="12dp"
-        android:background="@android:color/white">
+        android:background="@color/surface">
 
         <TextView
             android:id="@+id/tvBack"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="‹"
             android:textSize="26sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_primary"
             android:paddingStart="4dp"
             android:paddingEnd="12dp" />
 
@@ -32,7 +32,7 @@
             android:text="我的订单"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#222222" />
+            android:textColor="@color/text_primary" />
     </LinearLayout>
 
     <!-- 三个状态标签 -->
@@ -40,11 +40,11 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        app:tabIndicatorColor="#FF4D4F"
+        android:background="@color/surface"
+        app:tabIndicatorColor="@color/primary"
         app:tabIndicatorHeight="2dp"
-        app:tabSelectedTextColor="#222222"
-        app:tabTextColor="#999999" />
+        app:tabSelectedTextColor="@color/text_primary"
+        app:tabTextColor="@color/text_secondary" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
             android:layout_gravity="center"
             android:text="暂无订单"
             android:textSize="13sp"
-            android:textColor="#999999"
+            android:textColor="@color/text_secondary"
             android:visibility="gone" />
 
         <ProgressBar

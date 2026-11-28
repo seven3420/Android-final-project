@@ -3,6 +3,7 @@ package com.edu.sicnu.cs.stu.niuwenya.studentc.order
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.databinding.ItemOrderProductBinding
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.CartItem
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.model.formatMoney
@@ -34,6 +35,13 @@ class ProductAdapter(private var productList: List<CartItem> = emptyList()) :
         val item = productList[position]
 
         holder.binding.tvProductName.text = item.name
+        if (item.image.isNotBlank()) {
+            Glide.with(holder.binding.ivProduct)
+                .load(item.image)
+                .placeholder(android.R.drawable.ic_menu_gallery)
+                .error(android.R.drawable.ic_menu_gallery)
+                .into(holder.binding.ivProduct)
+        }
         holder.binding.tvProductPrice.text = "¥${formatMoney(item.price)}"
         holder.binding.tvProductCount.text = "x${item.quantity}"
         holder.binding.tvProductAmount.text = "¥${formatMoney(item.amount)}"

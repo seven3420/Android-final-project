@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="@color/window_background">
 
     <!-- 顶部栏 -->
     <LinearLayout
@@ -12,7 +12,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="12dp"
-        android:background="@android:color/white">
+        android:background="@color/surface">
 
         <TextView
             android:id="@+id/tvBack"
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="‹"
             android:textSize="26sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_primary"
             android:paddingStart="4dp"
             android:paddingEnd="12dp" />
 
@@ -31,7 +31,7 @@
             android:text="订单详情"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#222222" />
+            android:textColor="@color/text_primary" />
     </LinearLayout>
 
     <FrameLayout
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp"
-                    android:background="@android:color/white">
+                    android:background="@drawable/bg_surface_card">
 
                     <TextView
                         android:id="@+id/tvStatus"
@@ -65,7 +65,7 @@
                         android:text="待支付"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="#FF4D4F" />
+                        android:textColor="@color/primary" />
 
                     <TextView
                         android:id="@+id/tvMovieTitle"
@@ -75,7 +75,7 @@
                         android:text="影片名称"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#222222" />
+                        android:textColor="@color/text_primary" />
 
                     <TextView
                         android:id="@+id/tvCinema"
@@ -84,7 +84,7 @@
                         android:layout_marginTop="6dp"
                         android:text="影院 · 影厅"
                         android:textSize="13sp"
-                        android:textColor="#666666" />
+                        android:textColor="@color/text_secondary" />
 
                     <TextView
                         android:id="@+id/tvShowTime"
@@ -93,7 +93,7 @@
                         android:layout_marginTop="4dp"
                         android:text="开场时间 · 语言版本"
                         android:textSize="13sp"
-                        android:textColor="#666666" />
+                        android:textColor="@color/text_secondary" />
 
                     <TextView
                         android:id="@+id/tvSeats"
@@ -102,7 +102,7 @@
                         android:layout_marginTop="8dp"
                         android:text="座位："
                         android:textSize="13sp"
-                        android:textColor="#333333" />
+                        android:textColor="@color/text_primary" />
 
                     <TextView
                         android:id="@+id/tvAddress"
@@ -111,7 +111,7 @@
                         android:layout_marginTop="4dp"
                         android:text="影院地址"
                         android:textSize="12sp"
-                        android:textColor="#999999" />
+                        android:textColor="@color/text_secondary" />
                 </LinearLayout>
 
                 <!-- 卖品 -->
@@ -121,7 +121,7 @@
                     android:orientation="vertical"
                     android:layout_marginTop="12dp"
                     android:padding="16dp"
-                    android:background="@android:color/white">
+                    android:background="@drawable/bg_surface_card">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -129,7 +129,7 @@
                         android:text="卖品"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:textColor="#333333" />
+                        android:textColor="@color/text_primary" />
 
                     <LinearLayout
                         android:id="@+id/layoutGoodsContainer"
@@ -145,7 +145,7 @@
                         android:layout_marginTop="6dp"
                         android:text="本单未加购卖品"
                         android:textSize="12sp"
-                        android:textColor="#999999" />
+                        android:textColor="@color/text_secondary" />
                 </LinearLayout>
 
                 <!-- 金额 -->
@@ -155,7 +155,7 @@
                     android:orientation="vertical"
                     android:layout_marginTop="12dp"
                     android:padding="16dp"
-                    android:background="@android:color/white">
+                    android:background="@drawable/bg_surface_card">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -168,7 +168,7 @@
                             android:layout_weight="1"
                             android:text="票款"
                             android:textSize="13sp"
-                            android:textColor="#666666" />
+                            android:textColor="@color/text_secondary" />
 
                         <TextView
                             android:id="@+id/tvTicketAmount"
@@ -176,7 +176,7 @@
                             android:layout_height="wrap_content"
                             android:text="¥0.00"
                             android:textSize="13sp"
-                            android:textColor="#333333" />
+                            android:textColor="@color/text_primary" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -191,7 +191,7 @@
                             android:layout_weight="1"
                             android:text="卖品"
                             android:textSize="13sp"
-                            android:textColor="#666666" />
+                            android:textColor="@color/text_secondary" />
 
                         <TextView
                             android:id="@+id/tvGoodsAmount"
@@ -199,7 +199,7 @@
                             android:layout_height="wrap_content"
                             android:text="¥0.00"
                             android:textSize="13sp"
-                            android:textColor="#333333" />
+                            android:textColor="@color/text_primary" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -216,7 +216,7 @@
                             android:text="合计"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:textColor="#333333" />
+                            android:textColor="@color/text_primary" />
 
                         <TextView
                             android:id="@+id/tvTotalAmount"
@@ -225,7 +225,7 @@
                             android:text="¥0.00"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:textColor="#FF4D4F" />
+                            android:textColor="@color/primary" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -237,7 +237,7 @@
                     android:orientation="vertical"
                     android:layout_marginTop="12dp"
                     android:padding="16dp"
-                    android:background="@android:color/white">
+                    android:background="@drawable/bg_surface_card">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -245,7 +245,7 @@
                         android:text="取票码"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:textColor="#333333" />
+                        android:textColor="@color/text_primary" />
 
                     <TextView
                         android:id="@+id/tvTicketCode"
@@ -256,7 +256,7 @@
                         android:textSize="22sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.1"
-                        android:textColor="#222222" />
+                        android:textColor="@color/text_primary" />
 
                     <ImageView
                         android:id="@+id/ivTicketQr"
@@ -275,7 +275,7 @@
                         android:text="已使用"
                         android:textSize="13sp"
                         android:textStyle="bold"
-                        android:textColor="#FF4D4F"
+                        android:textColor="@color/primary"
                         android:visibility="gone" />
 
                     <LinearLayout
@@ -291,7 +291,7 @@
                             android:text="取餐码"
                             android:textSize="14sp"
                             android:textStyle="bold"
-                            android:textColor="#333333" />
+                            android:textColor="@color/text_primary" />
 
                         <TextView
                             android:id="@+id/tvGoodsCode"
@@ -302,7 +302,7 @@
                             android:textSize="22sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.1"
-                            android:textColor="#222222" />
+                            android:textColor="@color/text_primary" />
 
                         <ImageView
                             android:id="@+id/ivGoodsQr"
@@ -322,7 +322,7 @@
                     android:orientation="vertical"
                     android:layout_marginTop="12dp"
                     android:padding="16dp"
-                    android:background="@android:color/white"
+                    android:background="@drawable/bg_surface_card"
                     android:visibility="gone">
 
                     <LinearLayout
@@ -343,7 +343,7 @@
                                 android:text="开场提醒"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
-                                android:textColor="#333333" />
+                                android:textColor="@color/text_primary" />
 
                             <TextView
                                 android:id="@+id/tvReminderHint"
@@ -352,7 +352,7 @@
                                 android:layout_marginTop="4dp"
                                 android:text="开场前 30 分钟提醒您取票入场"
                                 android:textSize="12sp"
-                                android:textColor="#999999" />
+                                android:textColor="@color/text_secondary" />
                         </LinearLayout>
 
                         <androidx.appcompat.widget.SwitchCompat
@@ -370,7 +370,7 @@
                     android:orientation="vertical"
                     android:layout_marginTop="12dp"
                     android:padding="16dp"
-                    android:background="@android:color/white"
+                    android:background="@drawable/bg_surface_card"
                     android:gravity="center_horizontal">
 
                     <TextView
@@ -379,7 +379,7 @@
                         android:layout_height="wrap_content"
                         android:text="剩余支付时间"
                         android:textSize="13sp"
-                        android:textColor="#FF4D4F" />
+                        android:textColor="@color/primary" />
 
                     <Button
                         android:id="@+id/btnPay"
@@ -389,7 +389,7 @@
                         android:text="去支付"
                         android:textSize="15sp"
                         android:textColor="@android:color/white"
-                        android:backgroundTint="#FF4D4F" />
+                        android:backgroundTint="@color/primary" />
 
                     <Button
                         android:id="@+id/btnCancel"
@@ -398,8 +398,8 @@
                         android:layout_marginTop="8dp"
                         android:text="取消订单"
                         android:textSize="15sp"
-                        android:textColor="#666666"
-                        android:backgroundTint="#EEEEEE" />
+                        android:textColor="@color/text_secondary"
+                        android:backgroundTint="@color/divider" />
                 </LinearLayout>
 
             </LinearLayout>

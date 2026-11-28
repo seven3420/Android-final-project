@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.R
 import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.databinding.ActivityOrderDetailBinding
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.api.RetrofitClient
 import com.edu.sicnu.cs.stu.niuwenya.studentc.order.api.cancelOrder
@@ -128,7 +129,7 @@ class OrderDetailActivity : AppCompatActivity() {
             val row = TextView(this).apply {
                 text = "${goods.nameText}  ×${goods.quantity}    ¥${formatMoney(goods.amount)}"
                 textSize = 13f
-                setTextColor(0xFF333333.toInt())
+                setTextColor(ContextCompat.getColor(this@OrderDetailActivity, R.color.text_primary))
                 setPadding(0, dp(6), 0, 0)
             }
             binding.layoutGoodsContainer.addView(row)
@@ -151,13 +152,13 @@ class OrderDetailActivity : AppCompatActivity() {
                 )
                 binding.tvTicketCodeState.text = invalidLabel
                 binding.tvTicketCodeState.isVisible = true
-                binding.tvTicketCode.setTextColor(0xFF999999.toInt())
+                binding.tvTicketCode.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
                 binding.tvTicketCode.paintFlags =
                     binding.tvTicketCode.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             } else {
                 binding.ivTicketQr.setImageBitmap(QrCodeUtil.encode(d.ticketCodeText))
                 binding.tvTicketCodeState.isVisible = false
-                binding.tvTicketCode.setTextColor(0xFF222222.toInt())
+                binding.tvTicketCode.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
                 binding.tvTicketCode.paintFlags =
                     binding.tvTicketCode.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
@@ -304,9 +305,9 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun statusColor(status: Int): Int = when (status) {
-        OrderStatus.UNPAID -> 0xFFFF4D4F.toInt()
-        OrderStatus.PAID -> 0xFF52C41A.toInt()
-        else -> 0xFF999999.toInt()
+        OrderStatus.UNPAID -> ContextCompat.getColor(this, R.color.accent_clay)
+        OrderStatus.PAID -> ContextCompat.getColor(this, R.color.sage_dark)
+        else -> ContextCompat.getColor(this, R.color.text_secondary)
     }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()

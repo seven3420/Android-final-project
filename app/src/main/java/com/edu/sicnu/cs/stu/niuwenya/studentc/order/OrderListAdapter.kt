@@ -4,6 +4,7 @@ import cn.edu.sicnu.cs.stu.zhuoyilin.sixth.R
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -49,7 +50,7 @@ class OrderListAdapter(
 
         binding.tvMovieTitle.text = item.movieTitleText
         binding.tvStatus.text = item.statusText
-        binding.tvStatus.setTextColor(statusColor(item.status))
+        binding.tvStatus.setTextColor(statusColor(binding.root.context, item.status))
 
         binding.tvCinema.text = listOf(item.cinemaNameText, item.hallNameText)
             .filter { it.isNotEmpty() }.joinToString(" · ")
@@ -90,9 +91,9 @@ class OrderListAdapter(
             .into(holder.ivPoster)
     }
 
-    private fun statusColor(status: Int): Int = when (status) {
-        OrderStatus.UNPAID -> 0xFFFF4D4F.toInt()
-        OrderStatus.PAID -> 0xFF52C41A.toInt()
-        else -> 0xFF999999.toInt()
+    private fun statusColor(context: android.content.Context, status: Int): Int = when (status) {
+        OrderStatus.UNPAID -> ContextCompat.getColor(context, R.color.accent_clay)
+        OrderStatus.PAID -> ContextCompat.getColor(context, R.color.sage_dark)
+        else -> ContextCompat.getColor(context, R.color.text_secondary)
     }
 }

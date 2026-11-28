@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@android:color/white"
+    android:background="@drawable/bg_surface_card"
     android:paddingBottom="16dp">
 
     <TextView
@@ -12,7 +12,7 @@
         android:text="收银台"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="#222222"
+        android:textColor="@color/text_primary"
         android:gravity="center"
         android:paddingTop="16dp"
         android:paddingBottom="8dp" />
@@ -24,7 +24,7 @@
         android:text="¥0.00"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="#FF4D4F"
+        android:textColor="@color/primary"
         android:gravity="center"
         android:paddingBottom="16dp" />
 
@@ -42,7 +42,7 @@
             android:layout_height="48dp"
             android:text="支付宝"
             android:textSize="15sp"
-            android:textColor="#333333"
+            android:textColor="@color/text_primary"
             android:checked="true" />
 
         <RadioButton
@@ -51,7 +51,7 @@
             android:layout_height="48dp"
             android:text="微信支付"
             android:textSize="15sp"
-            android:textColor="#333333" />
+            android:textColor="@color/text_primary" />
 
         <RadioButton
             android:id="@+id/rbUnionPay"
@@ -59,7 +59,7 @@
             android:layout_height="48dp"
             android:text="云闪付"
             android:textSize="15sp"
-            android:textColor="#333333" />
+            android:textColor="@color/text_primary" />
     </RadioGroup>
 
     <TextView
@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:text="课程作业为模拟支付，点击后订单直接置为已支付并生成取票码"
         android:textSize="11sp"
-        android:textColor="#999999"
+        android:textColor="@color/text_secondary"
         android:gravity="center"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
@@ -83,6 +83,6 @@
         android:text="立即支付"
         android:textSize="15sp"
         android:textColor="@android:color/white"
-        android:backgroundTint="#FF4D4F" />
+        android:backgroundTint="@color/primary" />
 
 </LinearLayout>
